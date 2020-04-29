@@ -21,13 +21,19 @@
   <build>
 		<plugins>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${compiler-plugin.version}</version>
 				<configuration>
-					<source>11</source>
-					<target>11</target>
-					<compilerVersion>11</compilerVersion>
+					<release>11</release>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>${checkstyle-plugin.version}</version>
+				<configuration>
+					<configLocation>finmath-checkstyle.xml</configLocation>
+					<excludes>**/session1/**/*,**/session2/**/*</excludes>
 				</configuration>
 			</plugin>
 		</plugins>
