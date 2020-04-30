@@ -21,7 +21,7 @@ public class FloatAndDouble {
 	 *         such that |x-x0|<2^(-n), and the correspondent int n.
 	 */
 	public static EpsilonAndExponent computeBiggestEpsilon(double x, double x0) {
-		double difference = Math.abs(x0 - x);
+		double difference = Math.abs(x0 - x);// float if at least one of x and x0 is a float
 		double epsilon = 1.0;
 		int exponent = 0;
 		// computation of epsilon and of the exponent
@@ -29,6 +29,10 @@ public class FloatAndDouble {
 			epsilon /= 2.0; // epsilon=epsilon/2
 			exponent++;
 		}
+// 		or:
+//		int exponent = -Math.getExponent(difference);// returns the exponent used in the representation of a double
+//		// diff = (1+c/2^p)2^e, with 0<=c<2^p, so 2^e <= (1+c/2^p)2^e = diff < 2^(e+1).
+//		double epsilon = Math.pow(2, -exponent);
 		/*
 		 * we create this class because epsilon is a double and exponent int, and we
 		 * cannot have an array with different types. Two different ways to do this
@@ -39,6 +43,7 @@ public class FloatAndDouble {
 		// we set the values of the epsilon and exponent field of the class
 		epsilonAndExponent.setEpsilon(epsilon);
 		epsilonAndExponent.setExponent(exponent);
+
 		return epsilonAndExponent;
 	}
 
