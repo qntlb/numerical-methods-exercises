@@ -27,7 +27,7 @@ public class McLaurinCosine {
 	 */
 	public static double macLaurinCosineInZeroPi(double x, int n) {
 		double macLaurinApproximation = 0.0; // initialization of the sum
-		int factorial = 1;// you can get negative numbers due to an overflow for large m
+		long factorial = 1;// you can get negative numbers due to an overflow for large m
 		for (int i = 0; i < (n + 1); i++) {
 			// Maclaurin formula
 			macLaurinApproximation += Math.pow(-1, i) * Math.pow(x, 2 * i) / factorial;
@@ -48,16 +48,12 @@ public class McLaurinCosine {
 	 */
 	public static double macLaurinCosineSeries(double d, int n) {
 
-		double reduction = d % (Math.PI);// the reminder of the ratio
-		double ratio = d / Math.PI;
-		int intReduction = (int) ratio; // ratio downcasted to integer
-		// or:
-		// int intReduction = (int) Math.floor(ratio);
-		if ((intReduction % 2) == 0) { // in this case, the cosine is positive
+		double reduction = d % (2 * Math.PI);// the reminder of the ratio
+		if (reduction < Math.PI) { // we directly return the value of the series
 			return macLaurinCosineInZeroPi(reduction, n);
-		} // otherwise it is negative
-			// note: we don't need else because return already exit the method
-		return macLaurinCosineInZeroPi(reduction, n) * (-1);
+		}
+		// note: we don't need else because return already exit the method
+		return -macLaurinCosineInZeroPi(reduction - Math.PI, n);// property of the cosine
 	}
 
 	public static void main(String[] args) {
