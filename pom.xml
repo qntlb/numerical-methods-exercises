@@ -30,7 +30,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>${checkstyle-plugin.version}</version>
 				<configuration>
 					<configLocation>finmath-checkstyle.xml</configLocation>
 					<excludes>**/session1/**/*,**/session2/**/*</excludes>
