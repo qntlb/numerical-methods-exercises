@@ -27,12 +27,12 @@ public class McLaurinCosine {
 	 */
 	public static double macLaurinCosineInZeroPi(double x, int n) {
 		double macLaurinApproximation = 0.0; // initialization of the sum
-		long factorial = 1;// you can get negative numbers due to an overflow for large m
+		int factorial = 1;// you can get negative numbers due to an overflow for large m
 		for (int i = 0; i < (n + 1); i++) {
 			// Maclaurin formula
 			macLaurinApproximation += Math.pow(-1, i) * Math.pow(x, 2 * i) / factorial;
-			// System.out.println("Power = " + Math.pow(x, 2 * i));
-			// System.out.println("Factorial = " + factorial);
+			System.out.println("Power = " + Math.pow(x, 2 * i));
+			System.out.println("Factorial = " + factorial);
 			factorial *= (2 * i + 1);
 			factorial *= (2 * i + 2);
 		}
