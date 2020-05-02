@@ -27,14 +27,14 @@ public class McLaurinCosine {
 	 */
 	public static double macLaurinCosineInZeroPi(double x, int n) {
 		double macLaurinApproximation = 0.0; // initialization of the sum
-		int factorial = 1;// you can get negative numbers due to an overflow for large m
+		double factorial = 1;// you can get negative numbers due to an overflow for large m
 		for (int i = 0; i < (n + 1); i++) {
 			// Maclaurin formula
 			macLaurinApproximation += Math.pow(-1, i) * Math.pow(x, 2 * i) / factorial;
 			System.out.println("Power = " + Math.pow(x, 2 * i));
 			System.out.println("Factorial = " + factorial);
 			factorial *= (2 * i + 1);
-			factorial *= (2 * i + 2);
+			factorial *= (2 * i + 2);// factorial of 2(i+1)
 		}
 		return macLaurinApproximation;
 	}
@@ -42,23 +42,23 @@ public class McLaurinCosine {
 	/**
 	 * It computes the Maclaurin series of the cosine in a point x.
 	 * 
-	 * @param x the point where we want to compute the approximation
-	 * @param n the order of the approximation
+	 * @param angle the point where we want to compute the approximation
+	 * @param order the order of the approximation
 	 * @return the value of the approximation
 	 */
-	public static double macLaurinCosineSeries(double d, int n) {
+	public static double macLaurinCosineSeries(double angle, int order) {
 
-		double reduction = d % (2 * Math.PI);// the reminder of the ratio
+		double reduction = angle % (2 * Math.PI);// the reminder of the ratio
 		if (reduction < Math.PI) { // we directly return the value of the series
-			return macLaurinCosineInZeroPi(reduction, n);
+			return macLaurinCosineInZeroPi(reduction, order);
 		}
 		// note: we don't need else because return already exit the method
-		return -macLaurinCosineInZeroPi(reduction - Math.PI, n);// property of the cosine
+		return -macLaurinCosineInZeroPi(reduction - Math.PI, order);// property of the cosine
 	}
 
 	public static void main(String[] args) {
 		double valueInside = 1;
-		double valueOutside = 7;
+		double valueOutside = 2.8 / 2 * Math.PI;
 		int order = 10;
 
 		double cosWithApproximationValueInside = macLaurinCosineInZeroPi(valueInside, order);
