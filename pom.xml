@@ -16,6 +16,11 @@
 			<artifactId>finmath-lib</artifactId>
 			<version>5.0.0</version>
 		</dependency>
+		<dependency>
+			<groupId>com.andreamazzon</groupId>
+			<artifactId>java-oop-2020</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
   
   <build>
