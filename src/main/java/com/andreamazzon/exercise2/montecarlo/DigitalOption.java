@@ -4,11 +4,11 @@ package com.andreamazzon.exercise2.montecarlo;
  * This class deals with the implementation of a digital option with underlying 
  * a general stochastic process. The realizations of the underlying stochastic
  * process are stored in a matrix. A digital option with underlying S with maturity 
- * T pays 1 if S(T) >= K and 0 otherwise, where K is a threshold. 
+ * T pays 1 if S(T) > K and 0 otherwise, where K is a threshold. 
  * This class has two public methods besides the constructor: the method getPayoff 
  * returns a one-dimensional array whose entries are the realizations of the payoff, i.e.
  * its i-th entry is 1 if the entry of the matrix of the realizations of the process at 
- * the time index corresponding to T and simulation i is >= K and 0 vice versa.
+ * the time index corresponding to T and simulation i is > K and 0 vice versa.
  * The method getPrice returns the Monte-Carlo price of the option: since the realization
  * of the process at time T are independent on each other, the realizations of the
  * payoff are independent as well. For this reason, we can approximate the expectation
@@ -45,7 +45,7 @@ public class DigitalOption {
 		double[] payoffAtGivenTime = new double[numberOfSimulations];
 		for (int simulationIndex = 0; simulationIndex < numberOfSimulations; simulationIndex++) {
 			// note: this is the ternary if-else operator
-			payoffAtGivenTime[simulationIndex] = (realizations[simulationIndex] >= threshold) ? 1 : 0;
+			payoffAtGivenTime[simulationIndex] = (realizations[simulationIndex] > threshold) ? 1 : 0;
 		}
 		return payoffAtGivenTime;
 	}
