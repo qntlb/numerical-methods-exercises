@@ -23,7 +23,6 @@ import com.andreamazzon.exercise3.montecarlo.MonteCarloExperiments;
 public class MonteCarloIntegrationGeneralFunction extends MonteCarloExperiments {
 
 	private DoubleUnaryOperator integrand;
-	private int numberOfDrawings;
 
 	// public constructor
 	public MonteCarloIntegrationGeneralFunction(DoubleUnaryOperator integrand, int numberOfMonteCarloComputations,

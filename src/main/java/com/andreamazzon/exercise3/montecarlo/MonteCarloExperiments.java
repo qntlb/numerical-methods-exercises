@@ -20,6 +20,8 @@ public abstract class MonteCarloExperiments implements MonteCarloEvaluations {
 
 	protected int numberOfMonteCarloComputations;// the length of monteCarloComputations
 	// its elements are the different values obtained by the Monte-Carlo method
+	protected int numberOfDrawings; // the number of drawings for the single Monte-Carlo computation
+
 	protected double[] monteCarloComputations;
 
 	// it initializes and fill the vector monteCarloComputations

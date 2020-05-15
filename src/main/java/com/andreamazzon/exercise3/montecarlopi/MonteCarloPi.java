@@ -11,11 +11,15 @@ import com.andreamazzon.exercise3.montecarlo.MonteCarloExperimentsWithExactResul
  *
  */
 public class MonteCarloPi extends MonteCarloExperimentsWithExactResult {
-	private int numberOfDrawings;
 
 	public MonteCarloPi(int numberOfMonteCarloComputations, int numberOfSimulatedPoints) {
+		/*
+		 * numberOfMonteCarloComputations and numberOfDrawings are inherited from
+		 * MonteCarloExperiments
+		 */
 		this.numberOfMonteCarloComputations = numberOfMonteCarloComputations;
 		this.numberOfDrawings = numberOfSimulatedPoints;
+		// exactResult is directly inherited from MonteCarloExperimentsWithExactResult
 		this.exactResult = Math.PI;
 	}
 
