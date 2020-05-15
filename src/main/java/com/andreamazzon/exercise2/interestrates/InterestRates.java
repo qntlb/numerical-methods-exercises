@@ -15,7 +15,7 @@ public class InterestRates {
 	 * @return the daily rate
 	 */
 	public static double computeDailyRate(double annualRate) {
-		return Math.pow(1.0 + annualRate, 1.0 /* try to set 1 instead of 1.0: what does it happen? */ / 365) - 1;
+		return Math.pow(1.0 + annualRate, 1 /* try to set 1 instead of 1.0: what does it happen? */ / 365.0) - 1;
 	}
 
 	/**
@@ -33,6 +33,7 @@ public class InterestRates {
 		for (int i = 1; i <= numberOfDays; i++) {
 			finalWealth *= (1 + dailyRate); // finalWealth = finalWealth*(1+rate)
 		}
+		// finalWealth= initialMoney* Math.pow((1+dailyRate).numberOfDays);
 		return finalWealth;
 	}
 
@@ -60,9 +61,6 @@ public class InterestRates {
 
 		double dailyRate = computeDailyRate(annualRate); // daily rate given the annual rate
 
-		int holdingPeriod = 18 * 30; // 18 months, 30 days per month
-		double initialWealth = 2700;
-
 		double arithmeticAverageRate = annualRate / 365;
 
 		System.out.println("The daily rate is " + dailyRate
@@ -71,6 +69,9 @@ public class InterestRates {
 		System.out.println("with a relative difference of: " + Math.abs(dailyRate - arithmeticAverageRate) / dailyRate);
 
 		System.out.println();
+
+		int holdingPeriod = 18 * 30; // 18 months, 30 days per month
+		double initialWealth = 2700;
 
 		System.out.println("An amount of " + initialWealth + " euros is invested at the beginning");
 

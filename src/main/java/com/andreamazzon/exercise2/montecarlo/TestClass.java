@@ -19,11 +19,11 @@ public class TestClass {
 		double initialValue = 100;
 		double increaseIfUp = 1.5;
 		double decreaseIfDown = 0.5;
-		int lastTime = 10;
+		int lastTime = 2;
 		int numberOfSimulations = 100000;
 		int specifiedSeed = 1897;
 		// threshold for the option
-		double threshold = 100;
+		double threshold = 74;
 		// maturity for the option
 		int maturityIndex = lastTime;// the time is discrete, the time and the index coincide
 

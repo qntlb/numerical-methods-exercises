@@ -1,0 +1,1 @@
+memberSearchIndex = [{"p":"com.andreamazzon.exercise3.montecarlopi","c":"TestClass","l":"main(String[])","url":"main(java.lang.String[])"},{"p":"com.andreamazzon.exercise3.montecarlopi","c":"TestClass","l":"TestClass()","url":"%3Cinit%3E()"}]
