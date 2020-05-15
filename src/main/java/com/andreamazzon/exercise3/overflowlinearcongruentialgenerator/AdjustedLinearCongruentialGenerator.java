@@ -50,7 +50,7 @@ public class AdjustedLinearCongruentialGenerator {
 	private void generate() {
 
 		randomNumbers = new long[numberOfPseudoRandomNumbers + 1];// initialization! + 1 because the first one is the
-		long modulusOfMinusMinValue = -(Long.MIN_VALUE % modulus); // seed
+		long reminderOfMinusMinValue = -(Long.MIN_VALUE % modulus); // seed
 		randomNumbers[0] = seed; // the first entry is the seed: first number of the sequence
 		for (int indexOfInteger = 0; indexOfInteger < numberOfPseudoRandomNumbers; indexOfInteger++) {
 			long observedNumber = a * randomNumbers[indexOfInteger] + c;
@@ -61,9 +61,9 @@ public class AdjustedLinearCongruentialGenerator {
 				 * of course we can simplify +1 with -1: we keep in order for the method to be
 				 * more clear
 				 */
-				long modulusOverflowMinusOne = (valueOverflow - 1) % modulus;
+				long reminderOverflowMinusOne = (valueOverflow - 1) % modulus;
 				// this is the number to which we apply %
-				observedNumber = modulusOverflowMinusOne + modulusOfMinusMinValue;
+				observedNumber = reminderOverflowMinusOne + reminderOfMinusMinValue;
 			}
 			long congruence = observedNumber % modulus;
 //			if (congruence < 0) {
