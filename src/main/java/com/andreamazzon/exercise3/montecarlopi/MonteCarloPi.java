@@ -28,15 +28,15 @@ public class MonteCarloPi extends MonteCarloExperimentsWithExactResult {
 	 * radius 1, which is of course four times the area of the part of the circle in
 	 * the first quadrant. You compute this area by a Monte Carlo method as the
 	 * fraction of random, independent numbers (x,y) between 0 and 1, such that
-	 * x^2+y^2<=1.
+	 * (2*(x-0.5))^2+(2*(y-0.5))^2<=1.
 	 *
 	 * @return the approximation of pi.
 	 */
 	public double piMonteCarlo() {
 		int numberOfPOintsInsideCircle = 0;
 		for (int i = 0; i < numberOfDrawings; i++) {
-			double x = Math.random();// random double between 0 and 1
-			double y = Math.random();// random double between 0 and 1
+			double x = 2 * (0.5 - Math.random());// random double between -1 and 1
+			double y = 2 * (0.5 - Math.random());// random double between -1 and 1
 			if (x * x + y * y < 1) {
 				numberOfPOintsInsideCircle += 1;
 			}
