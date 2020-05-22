@@ -13,7 +13,7 @@ package com.andreamazzon.exercise4;
 public class HaltonSequencePiFromHypersphere {
 	private int dimension;
 	private int numberOfSamplePoints;
-	HaltonSequence haltonSequence;
+	private HaltonSequence haltonSequence;
 
 	public HaltonSequencePiFromHypersphere(int numberOfSamplePoints, int[] base) {
 
@@ -62,22 +62,22 @@ public class HaltonSequencePiFromHypersphere {
 	 * @return the approximation of pi.
 	 */
 	public double piHalton() {
-		int numberOfPointsInsideCircle = 0;
+		int numberOfPointsInsideHypersphere = 0;
 		for (int i = 0; i < numberOfSamplePoints; i++) {
 			/*
 			 * at every iteration, get (x_1,...,x_d) from the Halton sequence and compute
 			 * (2*(x_1-0.5))^2+...+(2*(x_d-0.5))^2
 			 */
-			double[] newPoints = haltonSequence.getSamplePoint(i);// i-th element of the Halton Sequence
+			double[] newPoint = haltonSequence.getSamplePoint(i);// i-th element of the Halton Sequence
 			double sumOfSquares = 0;
 			for (int j = 0; j < dimension; j++) {
-				sumOfSquares += newPoints[j] * newPoints[j];
+				sumOfSquares += newPoint[j] * newPoint[j];
 			}
-			if (sumOfSquares < 1) {
-				numberOfPointsInsideCircle += 1;
+			if (sumOfSquares <= 1) {
+				numberOfPointsInsideHypersphere += 1;
 			}
 		}
-		double volumeApproximation = Math.pow(2.0, dimension) * numberOfPointsInsideCircle / numberOfSamplePoints;
+		double volumeApproximation = Math.pow(2.0, dimension) * numberOfPointsInsideHypersphere / numberOfSamplePoints;
 		return computePiFromVolume(volumeApproximation);
 	}
 

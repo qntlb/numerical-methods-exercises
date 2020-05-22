@@ -46,9 +46,9 @@ public abstract class MonteCarloExperimentsWithExactResult extends MonteCarloExp
 	 */
 	public double[] getAbsoluteErrorsOfComputations() throws DifferentLengthException {
 		double[] computations = getComputations();
-		double[] arrayWithPi = new double[computations.length];
-		Arrays.fill(arrayWithPi, exactResult);// Java method!
-		double[] errors = UsefulMethodsMatricesVectors.differenceVectors(computations, arrayWithPi);
+		double[] arrayWithExactResult = new double[computations.length];
+		Arrays.fill(arrayWithExactResult, exactResult);// Java method!
+		double[] errors = UsefulMethodsMatricesVectors.differenceVectors(computations, arrayWithExactResult);
 		double[] absoluteErrors = UsefulMethodsMatricesVectors.absVector(errors);
 		return absoluteErrors;
 	}

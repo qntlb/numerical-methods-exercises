@@ -27,7 +27,7 @@ public class MonteCarloIntegrationPowerFunction extends MonteCarloExperimentsWit
 	// public constructor
 	public MonteCarloIntegrationPowerFunction(double exponent, int numberOfMonteCarloComputations,
 			int numberOfDrawings) {
-		DoubleUnaryOperator integrand = x -> Math.pow(x, exponent);
+		DoubleUnaryOperator integrand = (x -> Math.pow(x, exponent));
 		this.monteCarloGeneralFunction = new MonteCarloIntegrationGeneralFunction(integrand,
 				numberOfMonteCarloComputations, numberOfDrawings);
 		this.exactResult = 1 / (1 + exponent);

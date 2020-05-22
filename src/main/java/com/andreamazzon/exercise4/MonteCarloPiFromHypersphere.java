@@ -86,7 +86,7 @@ public class MonteCarloPiFromHypersphere extends MonteCarloExperimentsWithExactR
 			 * check if the sum is less or equal 1, i.e., if (x_1,...,x_d) is inside the
 			 * unit hypersphere
 			 */
-			if (sumOfSquares < 1) {
+			if (sumOfSquares <= 1) {
 				numberOfPointsInsideHypersphere += 1;
 			}
 		}

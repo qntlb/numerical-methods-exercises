@@ -48,7 +48,8 @@ public class MonteCarloIntegrationGeneralFunction extends MonteCarloExperiments 
 		 */
 		for (int i = 0; i < numberOfDrawings; i++) {
 			// every time with a different seed
-			integralValue = (integralValue * i + integrand.applyAsDouble(Math.random())) / (i + 1.0);
+			integralValue = (integralValue * i + integrand.applyAsDouble(Math.random())/* integrand(Math.random()) */)
+					/ (i + 1.0);
 		}
 		return integralValue;
 	}

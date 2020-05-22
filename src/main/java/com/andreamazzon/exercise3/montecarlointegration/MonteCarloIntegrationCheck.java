@@ -8,7 +8,7 @@ public class MonteCarloIntegrationCheck {
 	public static void main(String[] args) {
 
 		int numberOfIntegrations = 100;// number of Monte Carlo executions
-		int numberOfDrawings = 1000000;
+		int numberOfDrawings = 100000;
 
 		double exponent = 2;
 
