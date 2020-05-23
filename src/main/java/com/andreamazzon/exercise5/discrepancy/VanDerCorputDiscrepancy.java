@@ -80,11 +80,11 @@ public class VanDerCorputDiscrepancy {
 		final Plot plot = new Plot2D(2 /* min value on the x-axis */, maxSequenceLength, /* max value */
 				maxSequenceLength - 2, /* number of plotted points: length 1 and 2 are not considered */
 				Arrays.asList(new Named<DoubleUnaryOperator>("Star discrepancy", starDiscrepancyFunction),
-						new Named<DoubleUnaryOperator>("Log n over n", logNOverN))/* functions plotted */);
+						new Named<DoubleUnaryOperator>("Log(n)/n", logNOverN))/* functions plotted */);
 		plot.setIsLegendVisible(true);
 		plot.setTitle("Star discrepancy of Van der Corput sequences of length n vs log(n)/n");
 		plot.setXAxisLabel("length");
-		plot.setYAxisLabel("Dtar discrepancy");
+		plot.setYAxisLabel("Star discrepancy");
 		plot.show();
 	}
 
