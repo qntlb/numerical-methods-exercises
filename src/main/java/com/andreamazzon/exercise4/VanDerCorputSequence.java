@@ -31,6 +31,11 @@ public class VanDerCorputSequence {
 		return x;
 	}
 
+	/**
+	 * @param index The index of the sequence starting with 0
+	 * @param base  The base.
+	 * @return The van der Corput sequence up to the index n
+	 */
 	public static double[] getVanDerCorputSequence(int n, int base) {
 		double[] sequence = new double[n + 1];
 		for (int i = 0; i <= n; i++) {
