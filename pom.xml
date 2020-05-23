@@ -21,6 +21,11 @@
 			<artifactId>java-oop-2020</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>net.finmath</groupId>
+			<artifactId>finmath-lib-plot-extensions</artifactId>
+			<version>0.3.7</version>
+		</dependency>
 	</dependencies>
   
   <build>
