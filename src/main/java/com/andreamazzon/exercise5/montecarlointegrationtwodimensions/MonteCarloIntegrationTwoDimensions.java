@@ -22,20 +22,31 @@ import com.andreamazzon.exercise3.montecarlo.MonteCarloExperiments;
  */
 public class MonteCarloIntegrationTwoDimensions extends MonteCarloExperiments {
 
-	// Function from R^2 to R. Note the use of generics!
+	// Function from R x R to R. Note the use of generics!
 	private BiFunction<Double, Double, Double> integrand;
 
-	// write the public constructor
+	// public constructor
+	public MonteCarloIntegrationTwoDimensions(BiFunction<Double, Double, Double> integrand,
+			int numberOfMonteCarloComputations, int numberOfDrawings) {
+		this.integrand = integrand;
+		this.numberOfMonteCarloComputations = numberOfMonteCarloComputations;
+		this.numberOfDrawings = numberOfDrawings;
+	}
 
 	/**
 	 * It computes the Monte Carlo approximation of the integral of integrand in
-	 * [0,1].
+	 * [0,1] x [0,1].
 	 *
 	 * @return the approximated value of the integral
 	 */
 	public double computeIntegral() {
-		// implement the method
-		return 0;
+		double integralValue = 0;
+		for (int i = 0; i < numberOfDrawings; i++) {
+			// every time with a different seed
+			integralValue = (integralValue * i // previous average times number of previous computations
+					+ integrand.apply(Math.random(), Math.random())) / (i + 1.0);
+		}
+		return integralValue;
 	}
 
 	@Override

@@ -1,5 +1,7 @@
 package com.andreamazzon.exercise5.montecarlointegrationtwodimensions;
 
+import java.util.function.BiFunction;
+
 import com.andreamazzon.exercise3.montecarlo.MonteCarloExperimentsWithExactResult;
 
 /**
@@ -14,21 +16,20 @@ import com.andreamazzon.exercise3.montecarlo.MonteCarloExperimentsWithExactResul
  */
 public class MonteCarloPiFromTwoDimensionsIntegration extends MonteCarloExperimentsWithExactResult {
 
-	private MonteCarloIntegrationTwoDimensions monteCarloPiIndicator;
+	private final MonteCarloIntegrationTwoDimensions monteCarloPiIndicator;
 
 	// public constructor
 	public MonteCarloPiFromTwoDimensionsIntegration(int numberOfMonteCarloComputations, int numberOfDrawings) {
-		/*
-		 * give the implementation of the constructor. You have to give a value to the
-		 * fields exactResult and monteCarloPiIndicator. If you don't know how to
-		 * initialize a BiFunction<Double, Double, Double> object, here is an example:
-		 * BiFunction<Double, Double, Double> function = ((x, y) -> x * y represents
-		 * f(x,y)=x*y
-		 */
+		final BiFunction<Double, Double, Double> integrand = ((x,
+				y) -> 2 * (x - 0.5) * 2 * (x - 0.5) + 2 * (y - 0.5) * 2 * (y - 0.5) <= 1 ? 4.0 : 0.0);
+		this.monteCarloPiIndicator = new MonteCarloIntegrationTwoDimensions(integrand, numberOfMonteCarloComputations,
+				numberOfDrawings);
+		this.exactResult = Math.PI;
 	}
 
 	@Override
 	protected void generateMonteCarloComputations() {
-		// give the implementation of this method
+		// use of delegation through composition
+		monteCarloComputations = monteCarloPiIndicator.getComputations();
 	}
 }

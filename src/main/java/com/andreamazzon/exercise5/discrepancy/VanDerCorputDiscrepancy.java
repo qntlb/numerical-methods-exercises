@@ -3,8 +3,9 @@ package com.andreamazzon.exercise5.discrepancy;
 import java.util.Arrays;
 import java.util.function.DoubleUnaryOperator;
 
+import com.andreamazzon.exercise4.VanDerCorputSequence;
+
 import net.finmath.plots.Named;
-import net.finmath.plots.Plot;
 import net.finmath.plots.Plot2D;
 
 /**
@@ -30,7 +31,13 @@ public class VanDerCorputDiscrepancy {
 	 * @return the star discrepancy
 	 */
 	public static double getVanDerCorputStarDiscrepancy(int sequenceLength, int base) {
-		return 0;
+		/*
+		 * the vector given by the first sequenceLength elements of the Van der Corput
+		 * sequence: it must be sorted when computing the star discrepancy
+		 */
+		double[] vanDerCorputSequence = VanDerCorputSequence.getVanDerCorputSequence(sequenceLength, base);
+		double starDiscrepancy = DiscrepancyOneDimension.getStarDiscrepancy(vanDerCorputSequence);
+		return starDiscrepancy;
 	}
 
 	/**
@@ -44,7 +51,13 @@ public class VanDerCorputDiscrepancy {
 	 * @return the discrepancy
 	 */
 	public static double getVanDerCorputDiscrepancy(int sequenceLength, int base) {
-		return 0;
+		/*
+		 * the vector given by the first sequenceLength elements of the Van der Corput
+		 * sequence: it must be sorted when computing the star discrepancy
+		 */
+		double[] vanDerCorputSequence = VanDerCorputSequence.getVanDerCorputSequence(sequenceLength, base);
+		double discrepancy = DiscrepancyOneDimension.getDiscrepancy(vanDerCorputSequence);
+		return discrepancy;
 	}
 
 	/**
@@ -64,8 +77,8 @@ public class VanDerCorputDiscrepancy {
 		 * downcasted when we call the getVanDerCorputStarDiscrepancy method.
 		 */
 		final DoubleUnaryOperator starDiscrepancyFunction = (sequenceLength) -> {
-			// return the star discrepancy of the sequence of length sequenceLength
-			return 0;
+			final double starDiscrepancy = getVanDerCorputStarDiscrepancy((int) sequenceLength, base);
+			return starDiscrepancy;
 		};
 
 		/*
@@ -77,7 +90,7 @@ public class VanDerCorputDiscrepancy {
 			return Math.log(x) / x;
 		};
 
-		final Plot plot = new Plot2D(2 /* min value on the x-axis */, maxSequenceLength, /* max value */
+		final Plot2D plot = new Plot2D(2 /* min value on the x-axis */, maxSequenceLength, /* max value */
 				maxSequenceLength - 2, /* number of plotted points: length 1 and 2 are not considered */
 				Arrays.asList(new Named<DoubleUnaryOperator>("Star discrepancy", starDiscrepancyFunction),
 						new Named<DoubleUnaryOperator>("Log(n)/n", logNOverN))/* functions plotted */);
@@ -104,11 +117,11 @@ public class VanDerCorputDiscrepancy {
 		 * downcasted when we call the getVanDerCorputStarDiscrepancy method.
 		 */
 		final DoubleUnaryOperator discrepancyFunction = (sequenceLength) -> {
-			// return the star discrepancy of the sequence of length sequenceLength
-			return 0;
+			final double discrepancy = getVanDerCorputStarDiscrepancy((int) sequenceLength, base);
+			return discrepancy;
 		};
 
-		final Plot plot = new Plot2D(2 /* min value on the x-axis */, maxSequenceLength, /* max value */
+		final Plot2D plot = new Plot2D(2 /* min value on the x-axis */, maxSequenceLength, /* max value */
 				maxSequenceLength - 2, /* number of plotted points: length 1 and 2 are not considered */
 				Arrays.asList(
 						new Named<DoubleUnaryOperator>("Star discrepancy", discrepancyFunction))/* function plotted */);

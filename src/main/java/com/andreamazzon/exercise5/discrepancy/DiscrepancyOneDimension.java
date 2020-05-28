@@ -1,5 +1,7 @@
 package com.andreamazzon.exercise5.discrepancy;
 
+import java.util.Arrays;
+
 /**
  * This class is devoted to the computation of the discrepancy and of the star
  * discrepancy of a set of points in one dimension. The points of the set are
@@ -27,8 +29,32 @@ public class DiscrepancyOneDimension {
 	 *             the beginning by the Java method Arrays.sort.
 	 */
 	public static double getDiscrepancy(double[] set) {
-		// return the discrepancy if set. If you want you can use the method below
-		return 0;
+		Arrays.sort(set); // Java method to sort the set
+		final int totalNumberOfPoints = set.length;
+		/*
+		 * we first get the star discrepancy, i.e., we check intervals [0,b], where b
+		 * varies in the set of points.
+		 */
+		double discrepancy = getStarDiscrepancy(set);
+		/*
+		 * we now check open and closed intervals from set[position] to b, where
+		 * position runs from 0 (first element of the set) to totalNumberOfPoints - 2
+		 * (second last, we don't consider the last element in the set for the reason
+		 * you can see in the PDF) and b is bigger than set[position]
+		 */
+		for (int position = 0; position <= totalNumberOfPoints - 2; position++) {
+			/*
+			 * maximum value of the absolute value that appears in the definition of
+			 * discrepancy, given by intervals whose left end is set[position]
+			 */
+			final double newCandidate = getMaximumValue(set, position);
+			/*
+			 * if this new value is higher than the current maximum, we update the current
+			 * maximum
+			 */
+			discrepancy = Math.max(discrepancy, newCandidate);
+		}
+		return discrepancy;
 	}
 
 	/*
@@ -38,8 +64,32 @@ public class DiscrepancyOneDimension {
 	 * computed, n is the length of set, and x_i are points of the set.
 	 */
 	private static double getMaximumValue(double[] set, int position) {
-		// implement the method
-		return 0;
+		final int totalNumberOfPoints = set.length;
+		// they will get incremented by one every time we make b run in the set
+		double numberOfPointsInTheOpenIntervals = 0;
+		double numberOfPointsInTheClosedIntervals = 2;
+		double discrepancy = 0;
+		for (int i = 1; i <= totalNumberOfPoints - position - 1; i++) {
+			final double lengthOfNewInterval = set[position + i] - set[position];
+			final double newCandidate = Math.max(
+					lengthOfNewInterval - numberOfPointsInTheOpenIntervals / totalNumberOfPoints,
+					numberOfPointsInTheClosedIntervals / totalNumberOfPoints - lengthOfNewInterval);
+			// we update the maximum
+			discrepancy = Math.max(discrepancy, newCandidate);
+			numberOfPointsInTheOpenIntervals++;
+			numberOfPointsInTheClosedIntervals++;
+		}
+		// now we check the set involving b=1
+		if (set[totalNumberOfPoints - 1] != 1) {
+			final double lengthOfNewInterval = 1 - set[position];
+			/*
+			 * this is the only one that can increase the discrepancy: for closed sets, you
+			 * have same number of points with bigger length of the interval
+			 */
+			final double newCandidate = lengthOfNewInterval - numberOfPointsInTheOpenIntervals / totalNumberOfPoints;
+			discrepancy = Math.max(discrepancy, newCandidate);
+		}
+		return discrepancy;
 	}
 
 	/**
@@ -56,7 +106,19 @@ public class DiscrepancyOneDimension {
 	 *             the beginning by the Java method Arrays.sort.
 	 */
 	public static double getStarDiscrepancy(double[] set) {
-		// return the star discrepancy of set
-		return 0;
+		final int totalNumberOfPoints = set.length;
+		Arrays.sort(set); // Java method to sort the set
+		double starDiscrepancy = 0;
+		double numberOfPointsInTheClosedIntervals = 1;
+		for (int i = 0; i < totalNumberOfPoints; i++) {
+			final double newCandidate = Math.max(
+					set[i] - (numberOfPointsInTheClosedIntervals - 1) / totalNumberOfPoints,
+					numberOfPointsInTheClosedIntervals / totalNumberOfPoints - set[i]);
+			// we update the maximum
+			starDiscrepancy = Math.max(starDiscrepancy, newCandidate);
+			numberOfPointsInTheClosedIntervals++;
+		}
+		// note: no need to check the pint 1: it gives value 0
+		return starDiscrepancy;
 	}
 }
