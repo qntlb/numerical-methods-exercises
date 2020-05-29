@@ -109,11 +109,19 @@ public class DiscrepancyOneDimension {
 		final int totalNumberOfPoints = set.length;
 		Arrays.sort(set); // Java method to sort the set
 		double starDiscrepancy = 0;
-		double numberOfPointsInTheClosedIntervals = 1;
+		/*
+		 * If the first point set[0] of set is not zero, you simply start by checking
+		 * the intervals [0, set[0]] and [0, set[0]), where the number of points is the
+		 * closed set is 1. If set[0]=0, anyway, you don't have an interval. So you
+		 * basically skip this first check by returning zero in the for loop (zero
+		 * points in the interval, length of the interval zero).
+		 */
+		double numberOfPointsInTheClosedIntervals = (set[0] != 0) ? 1 : 0;
 		for (int i = 0; i < totalNumberOfPoints; i++) {
 			final double newCandidate = Math.max(
 					set[i] - (numberOfPointsInTheClosedIntervals - 1) / totalNumberOfPoints,
 					numberOfPointsInTheClosedIntervals / totalNumberOfPoints - set[i]);
+
 			// we update the maximum
 			starDiscrepancy = Math.max(starDiscrepancy, newCandidate);
 			numberOfPointsInTheClosedIntervals++;
