@@ -118,7 +118,7 @@ public class VanDerCorputDiscrepancy {
 		 * downcasted when we call the getVanDerCorputStarDiscrepancy method.
 		 */
 		DoubleUnaryOperator discrepancyFunction = (sequenceLength) -> {
-			double discrepancy = getVanDerCorputStarDiscrepancy((int) sequenceLength, base);
+			double discrepancy = getVanDerCorputDiscrepancy((int) sequenceLength, base);
 			return discrepancy;
 		};
 

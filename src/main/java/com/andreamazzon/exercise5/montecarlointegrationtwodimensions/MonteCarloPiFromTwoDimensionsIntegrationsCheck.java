@@ -62,7 +62,7 @@ public class MonteCarloPiFromTwoDimensionsIntegrationsCheck {
 
 		numberOfDrawings = 10;
 
-		while (numberOfDrawings <= 10000000) {
+		while (numberOfDrawings <= 1000000) {
 			MonteCarloPiFromTwoDimensionsIntegration newSimulator = new MonteCarloPiFromTwoDimensionsIntegration(
 					numberOfIntegrations, numberOfDrawings);
 			try {

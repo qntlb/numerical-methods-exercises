@@ -71,13 +71,13 @@ public class DiscrepancyOneDimension {
 		 */
 		double numberOfPointsInTheOpenIntervals = 0;
 		double numberOfPointsInTheClosedIntervals = 2;
-		double discrepancy = 0;
+		double maxValue = 0;
 		for (int i = 1; i <= totalNumberOfPoints - position - 1; i++) {
 			double lengthOfNewInterval = set[position + i] - set[position];
 			double newCandidate = Math.max(lengthOfNewInterval - numberOfPointsInTheOpenIntervals / totalNumberOfPoints,
 					numberOfPointsInTheClosedIntervals / totalNumberOfPoints - lengthOfNewInterval);
 			// we update the maximum
-			discrepancy = Math.max(discrepancy, newCandidate);
+			maxValue = Math.max(maxValue, newCandidate);
 			numberOfPointsInTheOpenIntervals++;
 			numberOfPointsInTheClosedIntervals++;
 		}
@@ -89,9 +89,9 @@ public class DiscrepancyOneDimension {
 			 * have same number of points with bigger length of the interval
 			 */
 			double newCandidate = lengthOfNewInterval - numberOfPointsInTheOpenIntervals / totalNumberOfPoints;
-			discrepancy = Math.max(discrepancy, newCandidate);
+			maxValue = Math.max(maxValue, newCandidate);
 		}
-		return discrepancy;
+		return maxValue;
 	}
 
 	/**
