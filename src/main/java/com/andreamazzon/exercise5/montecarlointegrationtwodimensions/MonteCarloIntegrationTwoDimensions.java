@@ -22,7 +22,10 @@ import com.andreamazzon.exercise3.montecarlo.MonteCarloExperiments;
  */
 public class MonteCarloIntegrationTwoDimensions extends MonteCarloExperiments {
 
-	// Function from R x R to R. Note the use of generics!
+	/*
+	 * Function from R x R to R. Note the use of generics! (Look for example at the
+	 * declaration of the method apply in the implementation of BiFunction)
+	 */
 	private BiFunction<Double, Double, Double> integrand;
 
 	// public constructor

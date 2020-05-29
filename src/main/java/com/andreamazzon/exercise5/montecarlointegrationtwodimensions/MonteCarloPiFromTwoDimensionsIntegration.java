@@ -16,11 +16,11 @@ import com.andreamazzon.exercise3.montecarlo.MonteCarloExperimentsWithExactResul
  */
 public class MonteCarloPiFromTwoDimensionsIntegration extends MonteCarloExperimentsWithExactResult {
 
-	private final MonteCarloIntegrationTwoDimensions monteCarloPiIndicator;
+	private MonteCarloIntegrationTwoDimensions monteCarloPiIndicator;
 
 	// public constructor
 	public MonteCarloPiFromTwoDimensionsIntegration(int numberOfMonteCarloComputations, int numberOfDrawings) {
-		final BiFunction<Double, Double, Double> integrand = ((x,
+		BiFunction<Double, Double, Double> integrand = ((x,
 				y) -> 2 * (x - 0.5) * 2 * (x - 0.5) + 2 * (y - 0.5) * 2 * (y - 0.5) <= 1 ? 4.0 : 0.0);
 		this.monteCarloPiIndicator = new MonteCarloIntegrationTwoDimensions(integrand, numberOfMonteCarloComputations,
 				numberOfDrawings);
