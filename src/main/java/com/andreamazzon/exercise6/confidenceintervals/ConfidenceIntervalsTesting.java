@@ -13,8 +13,8 @@ public class ConfidenceIntervalsTesting {
 
 	public static void main(String[] args) {
 		double lambda = 0.2;
-		int numberOfExponentialDrawings = 10000;
-		int sampleSize = 10000;
+		int numberOfMeanComputations = 10000;
+		int sampleSize = 100000;
 		double confidenceLevel = 0.9;
 		/*
 		 * exponentially distributed random variable: we want to compute the confidence
@@ -40,9 +40,9 @@ public class ConfidenceIntervalsTesting {
 				+ cLTInterval.getUpperBoundConfidenceInterval(confidenceLevel));
 
 		System.out.println("The frequence of lambda being in the Chebyshev  confidence interval" + "is "
-				+ chebychevInterval.frequenceOfInterval(numberOfExponentialDrawings, confidenceLevel) * 100 + "%");
+				+ chebychevInterval.frequenceOfInterval(numberOfMeanComputations, confidenceLevel) * 100 + "%");
 		System.out.println("The frequence of lambda being in the CLT confidence interval is "
-				+ cLTInterval.frequenceOfInterval(numberOfExponentialDrawings, confidenceLevel) * 100 + "%");
+				+ cLTInterval.frequenceOfInterval(numberOfMeanComputations, confidenceLevel) * 100 + "%");
 
 	}
 }

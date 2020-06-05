@@ -47,12 +47,12 @@ public abstract class MeanConfidenceInterval {
 		double upperBound = getUpperBoundConfidenceInterval(level);
 
 		double sampleMean;
-		for (int i = 0; i < sampleSize; i++) {
+		for (int i = 0; i < numberOfMeanComputations; i++) {
 			sampleMean = randomVariable.getSampleMean(sampleSize); // sample mean
 			if (sampleMean > lowerBound && sampleMean < upperBound) {
 				numberOfTimesInsideTheInterval++; // sample mean within the confidence interval
 			}
 		}
-		return numberOfTimesInsideTheInterval / sampleSize;
+		return numberOfTimesInsideTheInterval / numberOfMeanComputations;
 	}
 }

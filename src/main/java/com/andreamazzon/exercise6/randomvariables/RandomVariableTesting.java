@@ -26,8 +26,8 @@ public class RandomVariableTesting {
 
 		System.out.println("_".repeat(80) + "\n");
 
-		double mu = 0;
-		double sigma = 1.0;
+		double mu = 1;
+		double sigma = 2.0;
 		NormalRandomVariable normalSampler = new NormalRandomVariable(mu, sigma);
 
 		System.out.println("Normal random variable: comparing Empirical mean and std dev to mu and sigma");

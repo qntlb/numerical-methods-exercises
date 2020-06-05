@@ -61,10 +61,10 @@ public class NormalRandomVariable extends RandomVariable {
 	private double errorFunction(double x) {
 		double product = x;
 		double factorial = 1;
-		double sum = x;// n=0 in the formula (you multiply by 2 / Math.sqrt(Math.PI) at the end)
+		double sum = product;// n=0 in the formula (you multiply by 2 / Math.sqrt(Math.PI) at the end)
 		for (int n = 1; n <= orderOfApproximationForErf; n++) {
 			factorial *= n;
-			// (-1)^n y^(2n+1) = (-1)^(n-1)*y^(2(n-1)+1)*(-1)*y^2
+			// (-1)^n x^(2n+1) = (-1)^(n-1)*x^(2(n-1)+1)*(-1)*x^2
 			product *= (-1) * x * x;
 			sum += product / (factorial * (2 * n + 1));
 		}
@@ -88,7 +88,8 @@ public class NormalRandomVariable extends RandomVariable {
 	 * the quantile function for a standard normal random variable, from a formula
 	 * in Abramowitz and Stegun 26.2.23.
 	 *
-	 * @param x, the point where the quantile function is approximated
+	 * @param x, the point where the quantile function is approximated. This must be
+	 *           <=0.5
 	 * @returns the value of the approximation of the quantile function in x
 	 */
 	private double abramowitzQuantileFunction(double x) {// private: implementation, not interface
@@ -119,12 +120,14 @@ public class NormalRandomVariable extends RandomVariable {
 		 * random variable, and that the quantile function of a normal random variable
 		 * with mean mu and standard deviation sigma is qF(x) = sigma qFS(x) + mu.
 		 */
+		double quantileFunctionOfStandardNormal;
 		if (x > 0.5) {
-			return -sigma * abramowitzQuantileFunction(1 - x) + mu;
+			quantileFunctionOfStandardNormal = -abramowitzQuantileFunction(1 - x);
 		} else {
-			return sigma * abramowitzQuantileFunction(x) + mu;
+			quantileFunctionOfStandardNormal = abramowitzQuantileFunction(x);
 		}
 
+		return sigma * quantileFunctionOfStandardNormal + mu;
 	}
 
 }
