@@ -1,5 +1,7 @@
 package com.andreamazzon.exercise6.randomvariables;
 
+import java.util.function.DoubleUnaryOperator;
+
 /**
  * This interface provides methods to be implemented by a class representing a
  * random variable with a given distribution.
@@ -16,6 +18,17 @@ public interface RandomVariableInterface {
 	 * @return a realization of the random variable
 	 */
 	double generate();
+
+	/**
+	 * It generates a realization of a function of a random variable with given
+	 * distribution. The random variable is represented by the object calling the
+	 * method, and the function by a DoubleUnaryOperator given as an argument.
+	 *
+	 * @param function, the function to be sampled represented by a
+	 *                  DoubleUnaryOperator
+	 * @return a realization of the random variable
+	 */
+	double generate(DoubleUnaryOperator function);
 
 	/**
 	 * It returns the analytic expectation of a random variable with a given
@@ -44,6 +57,9 @@ public interface RandomVariableInterface {
 	 * result can differ from the value returned by getAnalyticMean called by the
 	 * same object, but it should converge to it for increasing n.
 	 *
+	 * @param n, the length of the sample
+	 * @return the mean of the sample of realizations of the random variable
+	 *
 	 */
 	double getSampleMean(int n);
 
@@ -55,8 +71,56 @@ public interface RandomVariableInterface {
 	 * getAnalyticStdDeviation called by the same object, but it should converge to
 	 * it for increasing n.
 	 *
+	 * @param n, the length of the sample
+	 * @return the standard deviation of the sample of realizations of the random
+	 *         variable
 	 */
 	double getSampleStdDeviation(int n);
+
+	/**
+	 * It returns the average of a one-dimensional array of specified length n of
+	 * independent realizations of a function of a random variable with given
+	 * distribution. The random variable is represented by the object calling the
+	 * method, and the function by a DoubleUnaryOperator given as an argument.
+	 *
+	 * @param n,        the length of the sample
+	 * @param function, the function to be sampled represented by a
+	 *                  DoubleUnaryOperator
+	 * @return the mean of the sample
+	 *
+	 */
+	double getSampleMean(int n, DoubleUnaryOperator function);
+
+	/**
+	 * It returns the standard deviation of a one-dimensional array of specified
+	 * length n of independent realizations of a function of a random variable with
+	 * given distribution. The random variable is represented by the object calling
+	 * the method, and the function by a DoubleUnaryOperator given as an argument.
+	 *
+	 * @param n,        the length of the sample
+	 * @param function, the function to be sampled represented by a
+	 *                  DoubleUnaryOperator
+	 * @return the standard deviation of the sample
+	 *
+	 */
+	double getSampleStdDeviation(int n, DoubleUnaryOperator function);
+
+	/**
+	 * It returns the average of a one-dimensional array of specified length n of
+	 * independent realizations of a function of a random variable with given
+	 * distribution, by weighted Monte-Carlo. The random variable is represented by
+	 * the object calling the method, and the function by a DoubleUnaryOperator
+	 * given as an argument.
+	 *
+	 * @param n,                   the length of the sample
+	 * @param function,            the function to be sampled represented by a
+	 *                             DoubleUnaryOperator
+	 * @param otherRandomVariable, an object of type RandomVariable which is used to
+	 *                             sample
+	 * @return the mean of the sample, calculated by weighted Monte-Carlo
+	 *
+	 */
+	double getSampleMeanWithWeightedMonteCarlo(int n, DoubleUnaryOperator function, RandomVariable otherRandomVariable);
 
 	/**
 	 * It returns the cumulative distribution function of the random variable

@@ -130,4 +130,86 @@ public class NormalRandomVariable extends RandomVariable {
 		return sigma * quantileFunctionOfStandardNormal + mu;
 	}
 
+	/**
+	 * It simulates a realization of a normal random variable by the
+	 * acceptance-rejection method using an exponential distributed random variable
+	 * with intensity 1.
+	 *
+	 * @return the realization
+	 */
+	public double generateAR() { // generation
+
+		double uniformDrawing, exponentialDrawing;
+		do {// you do it at least once: example of do..while
+			// generation of uniformDrawing and exponentialDrawing
+			uniformDrawing = Math.random();// realization of a uniformly distribute random variable in (0,1)
+			exponentialDrawing = (new ExponentialRandomVariable(1.0)).generate();// realization of exp random variable
+		}
+		// rejected if u > f(y)/(C*g(y)), C = (2*e/pi)^1/2
+		while (uniformDrawing > Math.exp(-(exponentialDrawing - 1) * (exponentialDrawing - 1) / 2));
+		double absoluteValueStandardNormalDrawing = exponentialDrawing;
+		double signOfNormalDrawing = Math.random() < 0.5 ? 1 : -1;
+		double standardNormalDrawing = absoluteValueStandardNormalDrawing * signOfNormalDrawing;
+		return sigma * standardNormalDrawing + mu;// multiply by sigma and add mu
+	}
+
+	/**
+	 * It generates a pair of independent normal random variable by inversion
+	 * sampling
+	 *
+	 * @return array of doubles of length 2, containing the two realizations
+	 */
+	public double[] generateBivariateNormal() { // generation
+		return new double[] { generate(), generate() };
+	}
+
+	/**
+	 * It generates a pair of independent normal random variable by acceptance
+	 * rejection
+	 *
+	 * @return array of doubles of length 2, containing the two realizations
+	 */
+	public double[] generateBivariateNormalAR() { // generation
+		return new double[] { generateAR(), generateAR() };
+	}
+
+	/**
+	 * It generates a pair of independent normal random variable by the Box-Müller
+	 * algorithm.
+	 *
+	 * @return array of doubles of length 2, containing the two realizations
+	 */
+	public double[] generateBoxMuller() {
+		double firstUniform = Math.random();// random variable uniformly distributed in (0,1)
+		double secondUniform = Math.random();// random variable uniformly distributed in (0,1)
+		double leftTerm = Math.sqrt(-2.0 * Math.log(firstUniform));
+		double firstStandard = leftTerm * Math.cos(2 * Math.PI * secondUniform);
+		double secondStandard = leftTerm * Math.sin(2 * Math.PI * secondUniform);
+		// note: the array is defined, initialized and returned at the same time
+		return new double[] { sigma * firstStandard + mu, sigma * secondStandard + mu };
+	}
+
+	/**
+	 * It generates a pair of independent normal random variable by the Box-Müller
+	 * algorithm with acceptance rejection.
+	 *
+	 * @return array of doubles of length 2, containing the two realizations
+	 */
+	public double[] generateARBoxMuller() {
+		double firstUniformInOneMinusOne, secondUniformInOneMinusOne, sumOfSquares, s;
+		do {// you do it at least once: example of do..while
+			// two random variables uniformly distributed in (-1,1)
+			firstUniformInOneMinusOne = 2 * Math.random() - 1;
+			secondUniformInOneMinusOne = 2 * Math.random() - 1;
+			sumOfSquares = firstUniformInOneMinusOne * firstUniformInOneMinusOne
+					+ secondUniformInOneMinusOne * secondUniformInOneMinusOne;
+		} while (sumOfSquares > 1);// rejected if > 1
+		s = Math.sqrt(-2.0 * Math.log(sumOfSquares) / sumOfSquares);
+		double firstStandard = firstUniformInOneMinusOne * s;
+		double secondStandard = secondUniformInOneMinusOne * s;
+		// you have standard normal random variables: multiply them by sigma and add mu
+		return new double[] { sigma * firstStandard + mu, sigma * secondStandard + mu };
+
+	}
+
 }
