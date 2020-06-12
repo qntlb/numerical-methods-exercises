@@ -30,7 +30,7 @@ public class ImportanceSamplingTesting {
 
 		ExponentialRandomVariable exponential = new ExponentialRandomVariable(1.0);
 		// the mean is the barrier itself!
-		NormalRandomVariable shiftedNormal = new NormalRandomVariable(barrier, 1.0);
+		NormalRandomVariable shiftedNormal = new NormalRandomVariable(barrier, 1);
 		DoubleUnaryOperator indicatorIntegrand = x -> (x > barrier) ? 1.0 : 0.0; // 1_{X > barrier}
 
 		double analyticResult = 1 - exponential.cdfFunction(barrier);
@@ -80,15 +80,25 @@ public class ImportanceSamplingTesting {
 
 		System.out.println(
 				"The average percentage error of standard sampling is " + averagePercentualErrorStandardSampling);
-		// Divide by two for the double exponential coefficient!
 
 		System.out.println(
 				"The average percentage error of importance sampling is " + averagePercentualErrorImportanceSampling);
 
 		System.out.println();
 
-		System.out.println("Number of times when importance sampling is better: " + numberOffWinsImportanceSampling);
 		System.out.println("Number of times when standard sampling is better: " + numberOffWinsStandardSampling);
+		System.out.println("Number of times when importance sampling is better: " + numberOffWinsImportanceSampling);
+
+		/*
+		 * Comment on the variance:
+		 * Var(h(X)) - Var(h(Y)f(Y)/g(Y)) = \int h^2(x)f(x)dx - \int (h^2(x)f^2(x)/g^2(x))g(x)dx
+		 *  = \int h^2(x)f(x)(1-f(x)/g(x))dx,
+		 * therefore weighted Monte-Carlo leads to a strong variance reduction if g(x) is significantly bigger than f(x) for the values
+		 * of x for which h^2(x) is bigger.
+		 * This is the case in our example, since we choose a random variable with distribution centered in barrier
+		 *
+		 */
+
 
 	}
 }
