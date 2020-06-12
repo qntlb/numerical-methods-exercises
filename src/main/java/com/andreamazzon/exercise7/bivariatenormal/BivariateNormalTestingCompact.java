@@ -24,6 +24,39 @@ public class BivariateNormalTestingCompact {
 	static int numberOfComputations;
 	static int numberOfDrawings;
 
+
+	private static double[] testMethod(Callable<double[]> function) throws Exception {
+		/*
+		 * for every Monte-Carlo approximation, we compute the percentage error and the
+		 * time needed to do the computation. Then we compute the average.
+		 */
+		for (int i = 0; i < numberOfComputations; i++) {
+			/*
+			 * We compute for how many generated pairs both the values are smaller than mu
+			 */
+			double numberOfTimesBothSmallerThanMu = 0.0;
+			long lStartTime = System.currentTimeMillis();// time when the computations starts
+			for (int j = 0; j < numberOfDrawings; j++) {
+				double[] generatedPair = function.call();
+				if (generatedPair[0] < mu && generatedPair[1] < mu) {
+					numberOfTimesBothSmallerThanMu++;
+				}
+			}
+			/*
+			 * number of generated pairs for which both the values are smaller then the mean
+			 * divided by the number of simulations: you expect the result to be close to
+			 * 0.25
+			 */
+			double frequence = numberOfTimesBothSmallerThanMu / numberOfDrawings;
+			long lEndTime = System.currentTimeMillis();// time when the computation ends: it depends on the method.
+			double elapsedTime = lEndTime - lStartTime;
+			averageElapsedTime = (averageElapsedTime * i + elapsedTime) / (i + 1);
+			double error = Math.abs(frequence - exactResult) / exactResult * 100;
+			averageError = (averageError * i + error) / (i + 1);
+		}
+		return new double[]{averageError, averageElapsedTime};
+	}
+
 	/**
 	 * It tests the precision and the efficiency of a selected method to generate a
 	 * pair of independent normal random variables with expectation mu and standard
@@ -108,6 +141,8 @@ public class BivariateNormalTestingCompact {
 		System.out.println();
 	}
 
+
+
 	public static void main(String[] args) throws Exception {
 
 		double mu = 2;
@@ -123,37 +158,5 @@ public class BivariateNormalTestingCompact {
 		for (GenerationMethods modelSelector : GenerationMethods.values()) {// foreach syntax
 			testMethod(normalTestSampler, modelSelector, numberOfDrawings, numberOfComputations);
 		}
-	}
-
-	private static double[] testMethod(Callable<double[]> function) throws Exception {
-		/*
-		 * for every Monte-Carlo approximation, we compute the percentage error and the
-		 * time needed to do the computation. Then we compute the average.
-		 */
-		for (int i = 0; i < numberOfComputations; i++) {
-			/*
-			 * We compute for how many generated pairs both the values are smaller than mu
-			 */
-			double numberOfTimesBothSmallerThanMu = 0.0;
-			long lStartTime = System.currentTimeMillis();// time when the computations starts
-			for (int j = 0; j < numberOfDrawings; j++) {
-				double[] generatedPair = function.call();
-				if (generatedPair[0] < mu && generatedPair[1] < mu) {
-					numberOfTimesBothSmallerThanMu++;
-				}
-			}
-			/*
-			 * number of generated pairs for which both the values are smaller then the mean
-			 * divided by the number of simulations: you expect the result to be close to
-			 * 0.25
-			 */
-			double frequence = numberOfTimesBothSmallerThanMu / numberOfDrawings;
-			long lEndTime = System.currentTimeMillis();// time when the computation ends: it depends on the method.
-			double elapsedTime = lEndTime - lStartTime;
-			averageElapsedTime = (averageElapsedTime * i + elapsedTime) / (i + 1);
-			double error = Math.abs(frequence - exactResult) / exactResult * 100;
-			averageError = (averageError * i + error) / (i + 1);
-		}
-		return new double[]{averageError, averageElapsedTime};
 	}
 }
