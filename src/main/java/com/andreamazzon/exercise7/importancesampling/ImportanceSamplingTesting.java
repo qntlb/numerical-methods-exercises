@@ -19,21 +19,21 @@ import com.andreamazzon.exercise6.randomvariables.NormalRandomVariable;
 public class ImportanceSamplingTesting {
 	public static void main(String[] args) {
 
-		int numberOfDrawings = 10000;
+		final int numberOfDrawings = 10000;
 		/*
 		 * we do 1000 tests in order to get a better idea of the difference between
 		 * standard sampling and importance sampling
 		 */
-		int numberOfTests = 10000;
+		final int numberOfTests = 10000;
 
-		double barrier = 7.0;// we want compute P(X > barrier)
+		final double barrier = 7.0;// we want compute P(X > barrier)
 
-		ExponentialRandomVariable exponential = new ExponentialRandomVariable(1.0);
+		final ExponentialRandomVariable exponential = new ExponentialRandomVariable(1.0);
 		// the mean is the barrier itself!
-		NormalRandomVariable shiftedNormal = new NormalRandomVariable(barrier, 1);
-		DoubleUnaryOperator indicatorIntegrand = x -> (x > barrier) ? 1.0 : 0.0; // 1_{X > barrier}
+		final NormalRandomVariable shiftedNormal = new NormalRandomVariable(barrier, 1);
+		final DoubleUnaryOperator indicatorIntegrand = x -> (x > barrier) ? 1.0 : 0.0; // 1_{X > barrier}
 
-		double analyticResult = 1 - exponential.cdfFunction(barrier);
+		final double analyticResult = 1 - exponential.cdfFunction(barrier);
 
 		// we now compare the two methods
 
@@ -48,14 +48,14 @@ public class ImportanceSamplingTesting {
 		for (int i = 0; i < numberOfTests; i++) {
 
 			// standard sampling
-			double resultStandardSampling = exponential.getSampleMean(numberOfDrawings, indicatorIntegrand);
+			final double resultStandardSampling = exponential.getSampleMean(numberOfDrawings, indicatorIntegrand);
 			// importance sampling(weighted Monte-Carlo)
-			double resultImportanceSampling = exponential.getSampleMeanWithWeightedMonteCarlo(numberOfDrawings,
+			final double resultImportanceSampling = exponential.getSampleMeanWithWeightedMonteCarlo(numberOfDrawings,
 					indicatorIntegrand, shiftedNormal);
 
 			// percentage errors
-			double errorStandardSampling = Math.abs(analyticResult - resultStandardSampling) / analyticResult * 100;
-			double errorImportanceSampling = Math.abs(analyticResult - resultImportanceSampling) / analyticResult * 100;
+			final double errorStandardSampling = Math.abs(analyticResult - resultStandardSampling) / analyticResult * 100;
+			final double errorImportanceSampling = Math.abs(analyticResult - resultImportanceSampling) / analyticResult * 100;
 
 			// we update the average
 			averagePercentualErrorStandardSampling = (averagePercentualErrorStandardSampling * i
@@ -99,6 +99,14 @@ public class ImportanceSamplingTesting {
 		 *
 		 */
 
+		// variance of the sample for standard sampling
+		System.out.println();
+		final double varianceStandardSampling = exponential.getSampleStdDeviation(numberOfDrawings, indicatorIntegrand);
+		System.out.println("Variance for standard sampling: " + varianceStandardSampling);
+		final DoubleUnaryOperator weight = x -> (exponential.densityFunction(x) / shiftedNormal.densityFunction(x));
+		final DoubleUnaryOperator whatToSample = (x -> indicatorIntegrand.applyAsDouble(x) * weight.applyAsDouble(x));
+		final double varianceImportanceSampling = shiftedNormal.getSampleStdDeviation(numberOfDrawings, whatToSample);
+		System.out.println("Variance for importance sampling: " + varianceImportanceSampling);
 
 	}
 }
