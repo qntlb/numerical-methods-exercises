@@ -196,17 +196,17 @@ public class NormalRandomVariable extends RandomVariable {
 	 * @return array of doubles of length 2, containing the two realizations
 	 */
 	public double[] generateARBoxMuller() {
-		double firstUniformInOneMinusOne, secondUniformInOneMinusOne, sumOfSquares, s;
+		double firstUniformInMinusOneOne, secondUniformInMinusOneOne, sumOfSquares, s;
 		do {// you do it at least once: example of do..while
 			// two random variables uniformly distributed in (-1,1)
-			firstUniformInOneMinusOne = 2 * Math.random() - 1;
-			secondUniformInOneMinusOne = 2 * Math.random() - 1;
-			sumOfSquares = firstUniformInOneMinusOne * firstUniformInOneMinusOne
-					+ secondUniformInOneMinusOne * secondUniformInOneMinusOne;
+			firstUniformInMinusOneOne = 2 * Math.random() - 1;
+			secondUniformInMinusOneOne = 2 * Math.random() - 1;
+			sumOfSquares = firstUniformInMinusOneOne * firstUniformInMinusOneOne
+					+ secondUniformInMinusOneOne * secondUniformInMinusOneOne;
 		} while (sumOfSquares > 1);// rejected if > 1
 		s = Math.sqrt(-2.0 * Math.log(sumOfSquares) / sumOfSquares);
-		double firstStandard = firstUniformInOneMinusOne * s;
-		double secondStandard = secondUniformInOneMinusOne * s;
+		double firstStandard = firstUniformInMinusOneOne * s;
+		double secondStandard = secondUniformInMinusOneOne * s;
 		// you have standard normal random variables: multiply them by sigma and add mu
 		return new double[] { sigma * firstStandard + mu, sigma * secondStandard + mu };
 
