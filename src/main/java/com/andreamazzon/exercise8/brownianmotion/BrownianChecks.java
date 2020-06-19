@@ -2,6 +2,7 @@ package com.andreamazzon.exercise8.brownianmotion;
 
 import java.text.DecimalFormat;
 
+import net.finmath.time.TimeDiscretization;
 import net.finmath.time.TimeDiscretizationFromArray;
 
 /**
@@ -27,7 +28,7 @@ public class BrownianChecks {
 		final double deltaT = timeHorizon / numberOfTimeSteps;
 
 		// time discretization from the Finmath library
-		final TimeDiscretizationFromArray timeDiscretization = new TimeDiscretizationFromArray(
+		final TimeDiscretization timeDiscretization = new TimeDiscretizationFromArray(
 				initialTime, numberOfTimeSteps, deltaT);
 
 		// we construct the Brownian motion object
