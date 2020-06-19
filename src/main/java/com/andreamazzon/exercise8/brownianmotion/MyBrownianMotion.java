@@ -22,7 +22,7 @@ import net.finmath.time.TimeDiscretizationFromArray;
  */
 public class MyBrownianMotion {
 
-	private final TimeDiscretization times;//look at the TimeDiscretizationFromArray class of the Finmath library
+	private final TimeDiscretization times;//look at the TimeDiscretization interface and TimeDiscretizationFromArray class of the Finmath library
 
 	private final int numberOfFactors; //more than one if this is a multi-dimensional Brownian motion
 	private final int numberOfPaths; //number of simulations
@@ -68,7 +68,7 @@ public class MyBrownianMotion {
 		 *  TimeDiscretizationFromArray
 		 */
 		final int numberOfTimeSteps = times.getNumberOfTimeSteps();
-		final int numberOfTimes = times.getNumberOfTimes(); // number of TIMES = numberOfTimesteps + 1
+		final int numberOfTimes = times.getNumberOfTimes(); // number of times = numberOfTimesteps + 1
 		// 3-tensor. Dimensions are: number of time steps, number of factors and number of paths
 		final double[][][] brownianIncrements3Array = new double[numberOfTimeSteps][numberOfFactors]
 				[numberOfPaths];
@@ -95,9 +95,8 @@ public class MyBrownianMotion {
 					brownianIncrements3Array[timeIndex][factorIndex][pathIndex] = normalRv.generate()
 							* volatilities[timeIndex];
 					// we sum the increment
-					brownianPaths3Array[timeIndex
-					                    + 1][factorIndex][pathIndex] = brownianPaths3Array[timeIndex][factorIndex][pathIndex]
-					                    		+ brownianIncrements3Array[timeIndex][factorIndex][pathIndex];
+					brownianPaths3Array[timeIndex + 1][factorIndex][pathIndex] = brownianPaths3Array[timeIndex][factorIndex][pathIndex]
+							+ brownianIncrements3Array[timeIndex][factorIndex][pathIndex];
 				}
 			}
 		}
@@ -110,26 +109,24 @@ public class MyBrownianMotion {
 		 * for a given Brownian factor is wrapped into an object of type RandomVariableFromDoubleArray.
 		 */
 		//First, we allocate memory for RandomVariableFromDoubleArray wrapper objects.
-		brownianIncrements = new RandomVariableFromDoubleArray[numberOfTimeSteps]
-				[numberOfFactors];
-		brownianPaths = new RandomVariableFromDoubleArray[numberOfTimeSteps + 1]
-				[numberOfFactors];
+		brownianIncrements = new RandomVariable[numberOfTimeSteps][numberOfFactors];
+		brownianPaths = new RandomVariable[numberOfTimeSteps + 1][numberOfFactors];
 
 		// Wrap the values in RandomVariable objects
-		for (int j = 0; j < numberOfFactors; j++) {
+		for (int factorIndex = 0; factorIndex < numberOfFactors; factorIndex++) {
 			/*
 			 * The entries for time equal to zero are actually non stochastic: we use an
 			 * overload version of the constructor of RandomVariableFromDoubleArray that
 			 * builds non stochastic random variables (i.e., all the realizations are the
 			 * same).
 			 */
-			brownianPaths[0][j] = new RandomVariableFromDoubleArray(0, // filtration time
+			brownianPaths[0][factorIndex] = new RandomVariableFromDoubleArray(times.getTime(0), // filtration time
 					initialValue);
 			for (int timeIndex = 0; timeIndex < numberOfTimeSteps; timeIndex++) {
-				brownianIncrements[timeIndex][j] = new RandomVariableFromDoubleArray(times.getTime(timeIndex),
-						brownianIncrements3Array[timeIndex][j]);// vector: realizations of the rv
-				brownianPaths[timeIndex + 1][j] = new RandomVariableFromDoubleArray(times.getTime(timeIndex + 1),
-						brownianPaths3Array[timeIndex + 1][j]); // be careful on the indexes here
+				brownianIncrements[timeIndex][factorIndex] = new RandomVariableFromDoubleArray(times.getTime(timeIndex),
+						brownianIncrements3Array[timeIndex][factorIndex]);// vector: realizations of the rv
+				brownianPaths[timeIndex + 1][factorIndex] = new RandomVariableFromDoubleArray(times.getTime(timeIndex + 1),
+						brownianPaths3Array[timeIndex + 1][factorIndex]); // be careful on the indexes here
 			}
 		}
 	}

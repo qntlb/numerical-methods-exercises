@@ -19,7 +19,7 @@ public class BrownianChecks {
 		final DecimalFormat formatterTime = new DecimalFormat(" ##0.00;");
 
 		final int numberOfFactors = 2;
-		final int numberOfPaths = 10000;
+		final int numberOfPaths = 100000;
 
 		//time discretization parameters
 		final double initialTime = 0.0;
@@ -32,11 +32,11 @@ public class BrownianChecks {
 				initialTime, numberOfTimeSteps, deltaT);
 
 		// we construct the Brownian motion object
-		final MyBrownianMotion brownianMotion = new MyBrownianMotion(timeDiscretization,
-				numberOfFactors,numberOfPaths);
+		//final MyBrownianMotion brownianMotion = new MyBrownianMotion(timeDiscretization,
+		//		numberOfFactors,numberOfPaths);
 		// or
-		//MyBrownianMotion brownianMotion = new MyBrownianMotion(initial, numberOfTimeSteps, deltaT,
-		// numberOfFactors, numberOfPaths);
+		final MyBrownianMotion brownianMotion = new MyBrownianMotion(initialTime, numberOfTimeSteps, deltaT,
+				numberOfFactors, numberOfPaths);
 
 		/*
 		 * we first want to compute an approximation of the correlation between the two
@@ -44,7 +44,7 @@ public class BrownianChecks {
 		 * E[B_{t_j}^1B_{t_j}^2]-E[B_{t_j}^1]E[B_{t_j}^2] = E[B_{t_j}^1B_{t_j}^2]. So we
 		 * have to compute the approximated expectation of B_{t_j}^1B_{t_j}^2.
 		 */
-		final double[] averagesOfTheProduct = new double[numberOfTimeSteps + 1];
+		double averagesOfTheProduct;
 
 		/*
 		 * we compute the product across all the paths, yielding a new RandomVariable
@@ -52,15 +52,15 @@ public class BrownianChecks {
 		 * randomVariable) and getAverage methods of the RandomVariableFromDoubleArray
 		 * class
 		 */
-		for (int timeIndex = 0; timeIndex < averagesOfTheProduct.length; timeIndex += 10) {
+		for (int timeIndex = 0; timeIndex < numberOfTimeSteps + 1; timeIndex += 10) {
 
-			averagesOfTheProduct[timeIndex] = brownianMotion.getSimulations(timeIndex, 0) // RandomVariableFromDoubleArray
+			averagesOfTheProduct = brownianMotion.getSimulations(timeIndex, 0) // RandomVariableFromDoubleArray
 					.mult(brownianMotion.getSimulations(timeIndex, 1)) // multiply with RandomVariableFromDoubleArray
 					.getAverage(); // and get the average
 
 			System.out.println("The correlation of the two factors at time " +
 					formatterTime.format(timeDiscretization.getTime(timeIndex)) + " is " + " "
-					+ formatterValue.format(averagesOfTheProduct[timeIndex]));
+					+ formatterValue.format(averagesOfTheProduct));
 		}
 
 		System.out.println();
@@ -105,8 +105,9 @@ public class BrownianChecks {
 		 * we compute the two sides at final time, so with index numberOfTimeSteps =
 		 * numberOfTimes - 1. Pathwise: here we have the normal product between doubles
 		 */
-		final double brownianMotionAtFinalTimeAtGivenPath = brownianMotion.getSimulations(numberOfTimeSteps, 0)
-				.get(samplePath);
+		//final double brownianMotionAtFinalTimeAtGivenPath = brownianMotion.getSimulations(numberOfTimeSteps, 0)
+		//		.get(samplePath);
+		final double brownianMotionAtFinalTimeAtGivenPath = brownianMotion.getSpecificPath(0,samplePath)[numberOfTimeSteps];
 		final double rightHandSide = 0.5 * (brownianMotionAtFinalTimeAtGivenPath * brownianMotionAtFinalTimeAtGivenPath
 				- numberOfTimeSteps * deltaT);
 
