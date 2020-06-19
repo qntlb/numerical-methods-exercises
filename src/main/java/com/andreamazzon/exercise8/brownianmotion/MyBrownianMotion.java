@@ -2,6 +2,8 @@ package com.andreamazzon.exercise8.brownianmotion;
 import com.andreamazzon.exercise6.randomvariables.NormalRandomVariable;
 
 import net.finmath.montecarlo.RandomVariableFromDoubleArray;
+import net.finmath.stochastic.RandomVariable;
+import net.finmath.time.TimeDiscretization;
 import net.finmath.time.TimeDiscretizationFromArray;
 
 /**
@@ -20,7 +22,7 @@ import net.finmath.time.TimeDiscretizationFromArray;
  */
 public class MyBrownianMotion {
 
-	private final TimeDiscretizationFromArray times;//look at the TimeDiscretizationFromArray class of the Finmath library
+	private final TimeDiscretization times;//look at the TimeDiscretizationFromArray class of the Finmath library
 
 	private final int numberOfFactors; //more than one if this is a multi-dimensional Brownian motion
 	private final int numberOfPaths; //number of simulations
@@ -31,11 +33,11 @@ public class MyBrownianMotion {
 	 * matrices can be seen as 3-dimensional matrices of doubles, the third
 	 * dimension being the number of simulations.
 	 */
-	private RandomVariableFromDoubleArray[][] brownianIncrements;
-	private RandomVariableFromDoubleArray[][] brownianPaths;
+	private RandomVariable[][] brownianIncrements;
+	private RandomVariable[][] brownianPaths;
 
 	public MyBrownianMotion( // Constructor
-			TimeDiscretizationFromArray timeDiscretization, int numberOfFactors,
+			TimeDiscretization timeDiscretization, int numberOfFactors,
 			int numberOfPaths) {
 		this.times = timeDiscretization;
 		this.numberOfFactors = numberOfFactors;
@@ -136,7 +138,7 @@ public class MyBrownianMotion {
 	 * It gets and returns the time discretization used for the process
 	 * @return the time discretization used for the process
 	 */
-	public TimeDiscretizationFromArray getTimeDiscretization() {
+	public TimeDiscretization getTimeDiscretization() {
 		return times;
 	}
 
@@ -148,7 +150,7 @@ public class MyBrownianMotion {
 	 * @return the two-dimensional array of random variables representing the
 	 *         brownian increments
 	 */
-	public RandomVariableFromDoubleArray[][] getBrownianIncrements() {
+	public RandomVariable[][] getBrownianIncrements() {
 		// lazy initialization: brownianIncrements gets initialized only when needed
 		if (brownianIncrements == null) { // generated only once
 			generateBrownianMotion();
@@ -163,7 +165,7 @@ public class MyBrownianMotion {
 	 * @return the two-dimensional array of random variables
 	 * representing the brownian paths
 	 */
-	public RandomVariableFromDoubleArray[][] getAllThePaths() {
+	public RandomVariable[][] getAllThePaths() {
 		// lazy initialization: brownianPaths gets initialized only when needed
 		if (brownianPaths == null) { // generated only once
 			generateBrownianMotion();
@@ -179,7 +181,7 @@ public class MyBrownianMotion {
 	 * @param path,   index for the path (i.e., a given simulation)
 	 * @return a vector of doubles with the values of the increments over time
 	 */
-	public RandomVariableFromDoubleArray getBrownianIncrement(int timeIndex, int factorIndex) {
+	public RandomVariable getBrownianIncrement(int timeIndex, int factorIndex) {
 		// lazy initialization: brownianPaths gets initialized only when needed
 		if (brownianIncrements == null) { // generated only once
 			generateBrownianMotion();
@@ -197,7 +199,7 @@ public class MyBrownianMotion {
 	 * @return a random variable which stands for the Brownian motion for a given
 	 *         factor at a given time
 	 */
-	public RandomVariableFromDoubleArray getSimulations(int timeIndex, int factorIndex) {
+	public RandomVariable getSimulations(int timeIndex, int factorIndex) {
 		// lazy initialization: brownianPaths gets initialized only when needed
 		if (brownianPaths == null) { // generated only once
 			generateBrownianMotion();
@@ -213,13 +215,13 @@ public class MyBrownianMotion {
 	 * @return one-dimensional array of RandomVariableFromDoubleArray objects
 	 *         representing the evolution in time of the given indexed factor
 	 */
-	public RandomVariableFromDoubleArray[] getPathsForFactor(int factorIndex) {
+	public RandomVariable[] getPathsForFactor(int factorIndex) {
 		// lazy initialization: brownianPaths gets initialized only when needed
 		if (brownianPaths == null) {// generated only once
 			generateBrownianMotion();
 		}
 		final int numberOfTimes = times.getNumberOfTimes();
-		final RandomVariableFromDoubleArray[] paths = new RandomVariableFromDoubleArray[numberOfTimes];
+		final RandomVariable[] paths = new RandomVariableFromDoubleArray[numberOfTimes];
 		for (int timeIndex = 0; timeIndex < numberOfTimes; timeIndex++) {
 			paths[timeIndex] = brownianPaths[timeIndex][factorIndex];
 		}
@@ -235,7 +237,7 @@ public class MyBrownianMotion {
 	 */
 	public double[] getSpecificPath(int factorIndex, int pathIndex) {
 		// first we get the vector of random variables, for the given factor
-		final RandomVariableFromDoubleArray[] paths = getPathsForFactor(factorIndex);
+		final RandomVariable[] paths = getPathsForFactor(factorIndex);
 		final int numberOfTimes = paths.length;
 		final double[] specificPath = new double[numberOfTimes];
 		// the we extrapolate the path for the specific path
