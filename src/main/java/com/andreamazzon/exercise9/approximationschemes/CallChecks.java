@@ -58,13 +58,13 @@ public class CallChecks {
 			final int seed = randomGenerator.nextInt();
 
 			//the three simulations:
-			final AbstractSimulation euler = new EulerScheme(numberOfSimulations, volatility,
+			final AbstractSimulation euler = new EulerSchemeForBlackScholes(numberOfSimulations, volatility,
 					riskFreeRate, initialPrice, seed, times);
 
-			final AbstractSimulation logEuler = new LogEulerScheme(numberOfSimulations, volatility,
+			final AbstractSimulation logEuler = new LogEulerSchemeForBlackScholes(numberOfSimulations, volatility,
 					riskFreeRate, initialPrice, seed, times);
 
-			final AbstractSimulation milstein = new MilsteinScheme(numberOfSimulations, volatility,
+			final AbstractSimulation milstein = new MilsteinSchemeForBlackScholes(numberOfSimulations, volatility,
 					riskFreeRate, initialPrice, seed, times);
 
 			//three different objects for every method, with three different underlyings
