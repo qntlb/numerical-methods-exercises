@@ -11,6 +11,9 @@ import net.finmath.time.TimeDiscretization;
  */
 public class MilsteinSchemeForBlackScholes extends AbstractSimulation {
 
+	private final double muDrift;//mu
+	private final double sigmaVolatility;//sigma
+
 	public MilsteinSchemeForBlackScholes(int numberOfSimulations, double sigmaVolatility, double muDrift,
 			double initialValue, int seed, TimeDiscretization times) {
 		this.numberOfSimulations = numberOfSimulations;

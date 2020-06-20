@@ -11,6 +11,8 @@ import net.finmath.time.TimeDiscretization;
  */
 public class EulerSchemeForBlackScholes extends AbstractSimulation {
 
+	private final double muDrift;//mu
+	private final double sigmaVolatility;//sigma
 
 	public EulerSchemeForBlackScholes(int numberOfSimulations, double sigmaVolatility, double muDrift,
 			double initialValue, int seed, TimeDiscretization times) {

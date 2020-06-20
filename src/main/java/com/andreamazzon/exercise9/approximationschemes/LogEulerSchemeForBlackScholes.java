@@ -13,6 +13,9 @@ import net.finmath.time.TimeDiscretization;
  */
 public class LogEulerSchemeForBlackScholes extends AbstractSimulation {
 
+	private final double muDrift;//mu
+	private final double sigmaVolatility;//sigma
+
 	public LogEulerSchemeForBlackScholes(int numberOfSimulations, double sigmaVolatility, double muDrift,
 			double initialValue, int seed, TimeDiscretization times) {
 		this.numberOfSimulations = numberOfSimulations;
