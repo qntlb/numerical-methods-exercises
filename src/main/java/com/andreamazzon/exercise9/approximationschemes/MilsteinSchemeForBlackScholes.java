@@ -5,7 +5,8 @@ import net.finmath.time.TimeDiscretization;
 
 /**
  * This class simulates the trajectories of a geometric Brownian motion (i.e., Black-Scholes model)
- * by using an Milstein scheme.
+ * by using an Milstein scheme. This class extends AbstractSimulation by giving the implementation of
+ * getDrift and getDiffusion.
  *
  * @author Andrea Mazzon
  */
@@ -33,8 +34,8 @@ public class MilsteinSchemeForBlackScholes extends AbstractSimulation {
 	 */
 	@Override
 	protected RandomVariable getDrift(RandomVariable lastRealization, int timeIndex) {
-		// TO DO:implement the method
-		return  null;
+		final double timeStep = times.getTimeStep(timeIndex - 1);
+		return lastRealization.mult(muDrift).mult(timeStep);
 	}
 
 	/*
@@ -42,7 +43,11 @@ public class MilsteinSchemeForBlackScholes extends AbstractSimulation {
 	 */
 	@Override
 	protected RandomVariable getDiffusion(RandomVariable lastRealization, int timeIndex) {
-		// TO DO:implement the method, having a look at the scheme in the script
-		return  null;
+		final double timeStep = times.getTimeStep(timeIndex - 1);
+		final RandomVariable brownianIncrement = brownianMotion.getBrownianIncrement(timeIndex - 1, 0);
+		final RandomVariable linearTerm = lastRealization.mult(sigmaVolatility).mult(brownianIncrement);
+		final RandomVariable adjustment = brownianIncrement.mult(brownianIncrement).sub(timeStep).mult(lastRealization)
+				.mult(sigmaVolatility*sigmaVolatility*0.5);
+		return linearTerm.add(adjustment);
 	}
 }

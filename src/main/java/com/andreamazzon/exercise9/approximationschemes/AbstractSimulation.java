@@ -4,6 +4,7 @@ import java.util.function.DoubleUnaryOperator;
 
 import net.finmath.montecarlo.BrownianMotion;
 import net.finmath.montecarlo.BrownianMotionFromMersenneRandomNumbers;
+import net.finmath.montecarlo.RandomVariableFromDoubleArray;
 import net.finmath.stochastic.RandomVariable;
 import net.finmath.time.TimeDiscretization;
 
@@ -74,18 +75,23 @@ public abstract class AbstractSimulation {
 		 * the drift and the diffusion of the process are random variables. We don't need to
 		 * store them: they will be uploaded every time.
 		 */
-		final RandomVariable processDrift;
-		final RandomVariable processDiffusion;
-		/*
-		 * TO DO: implement the method, doing the following:
-		 * - initialize paths;
-		 * - give the value of paths[0]
-		 * - construct a for loop with respect to time, where you get the values of processDrift and
-		 * processDiffusion at every iteration, calling the appropriate methods, and then sum them
-		 * to the last realization of the process. Hint here: pay attention to the fact that in general
-		 * you must use transform and inverseTransform. You can apply a function at a RandomVariable object
-		 * by the apply(DoubleUnaryOperator operator) method of RandomVariable
-		 */
+		RandomVariable processDrift;
+		RandomVariable processDiffusion;
+		paths = new RandomVariable[numberOfTimes];//one random variable every time
+
+		paths[0] = new RandomVariableFromDoubleArray(times.getTime(0), initialValue);
+
+
+		for (int timeIndex = 1; timeIndex < times.getNumberOfTimes(); timeIndex++) {
+			/*
+			 * for every time step, we compute drift and diffusion of the process, as RandomVariable
+			 * objects, and we add them to the previous value of the process.
+			 */
+			processDrift = getDrift(paths[timeIndex - 1],timeIndex);
+			processDiffusion = getDiffusion(paths[timeIndex - 1],timeIndex);
+			paths[timeIndex] = paths[timeIndex - 1].apply(inverseTransform).add(processDrift).add(processDiffusion);
+			paths[timeIndex] = paths[timeIndex].apply(transform);
+		}
 	}
 
 	//getters
@@ -119,7 +125,7 @@ public abstract class AbstractSimulation {
 	 * @return the last time of the time discretization
 	 */
 	public double getTimeHorizon() { // Just some getters and setters...
-		return times.getTime(times.getNumberOfTimes());
+		return times.getTime(getNumberOfTimes());
 	}
 
 	/**
@@ -171,9 +177,9 @@ public abstract class AbstractSimulation {
 	 */
 	public double[] getPathForGivenSimulation(int pathNumber) {
 		final RandomVariable[] pathAsRandomVariables = getPaths();
-
-		final double samplePath[] = new double[times.getNumberOfTimes() - 1];
-		for (int timeIndex = 0; timeIndex < samplePath.length; timeIndex++) {
+		final int numberOfTimes = times.getNumberOfTimes();
+		final double samplePath[] = new double[numberOfTimes];
+		for (int timeIndex = 0; timeIndex < numberOfTimes; timeIndex++) {
 			samplePath[timeIndex] = pathAsRandomVariables[timeIndex].get(pathNumber);
 		}
 		return samplePath;
@@ -185,8 +191,8 @@ public abstract class AbstractSimulation {
 	 */
 	public void printAPath(int pathNumber) {
 		final double[] samplePath = getPathForGivenSimulation(pathNumber);
-		for (final double element : samplePath) {
-			System.out.println(element);
+		for (final double realization : samplePath) {
+			System.out.println(realization);
 		}
 	}
 

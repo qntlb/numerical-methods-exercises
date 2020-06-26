@@ -1,5 +1,6 @@
 package com.andreamazzon.exercise9.approximationschemes;
 
+import net.finmath.montecarlo.RandomVariableFromDoubleArray;
 import net.finmath.stochastic.RandomVariable;
 import net.finmath.time.TimeDiscretization;
 
@@ -7,7 +8,8 @@ import net.finmath.time.TimeDiscretization;
  * This class simulates the trajectories of a geometric Brownian motion (i.e., Black-Scholes model)
  * by using a log Euler scheme: in this case, we simulate the trajectories of the logarithm of
  * the geometric Brownian motion. We use the exponential transform in order to return the right
- * values.
+ * values. This class extends AbstractSimulation by giving the implementation of
+ * getDrift and getDiffusion.
  *
  * @author Andrea Mazzon
  */
@@ -42,8 +44,8 @@ public class LogEulerSchemeForBlackScholes extends AbstractSimulation {
 	 */
 	@Override
 	protected RandomVariable getDrift(RandomVariable lastRealization, int timeIndex) {
-		//TO DO: implement the method
-		return null;
+		return new RandomVariableFromDoubleArray(times.getTime(timeIndex),
+				(muDrift-0.5*sigmaVolatility*sigmaVolatility)*(times.getTimeStep(timeIndex - 1)));
 	}
 
 	/*
@@ -52,7 +54,7 @@ public class LogEulerSchemeForBlackScholes extends AbstractSimulation {
 	 */
 	@Override
 	protected RandomVariable getDiffusion(RandomVariable lastRealization, int timeIndex) {
-		//TO DO: implement the method
-		return null;
+		final RandomVariable brownianIncrement = brownianMotion.getBrownianIncrement(timeIndex - 1, 0);
+		return brownianIncrement.mult(sigmaVolatility);
 	}
 }

@@ -40,7 +40,7 @@ public class CallChecks {
 		final double analyticCallValue = AnalyticFormulas.blackScholesOptionValue(initialPrice,
 				riskFreeRate, volatility, timeHorizon, strike);
 
-		final int numberOfTests = 500;
+		final int numberOfTests = 100;
 
 		double errorEulerCalls;
 		double errorLogEulerCalls;
@@ -91,5 +91,16 @@ public class CallChecks {
 		System.out.println("Average error for Euler scheme: " + averageErrorEuler);
 		System.out.println("Average error for log Euler scheme: " + averageErrorLogEuler);
 		System.out.println("Average error for Milstein scheme: " + averageErrorMilstein);
+
+		final AbstractSimulation newEuler = new EulerSchemeForBlackScholes(numberOfSimulations, volatility,
+				riskFreeRate, initialPrice, 1897, times);
+		final double finalAverageEmpirical = newEuler.getFinalValue().getAverage();
+		final double finalAverageAnalytic = initialPrice*Math.pow((1+delta*riskFreeRate),numberOfTimeSteps+1);
+		System.out.println();
+		System.out.println("The average of the geometric Brownian motion at final time for the Euler scheme is " +
+				finalAverageEmpirical);
+		System.out.println("The analytic average of the geometric Brownian motion at final time for the Euler scheme is " +
+				finalAverageAnalytic);
+
 	}
 }
