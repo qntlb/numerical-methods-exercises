@@ -23,7 +23,7 @@ public class CallChecks {
 		final int numberOfSimulations = 10000;//number of simulated paths
 
 		final double initialPrice = 100.0;
-		final double riskFreeRate = 0; //this will be the drift: we simulate under the risk neutral probability measure
+		final double riskFreeRate = 0.4; //this will be the drift: we simulate under the risk neutral probability measure
 		final double volatility = 0.25;
 
 		//time discretization
@@ -74,11 +74,11 @@ public class CallChecks {
 
 			//the three values of the error computing the price of the (discounted!) call option
 			errorEulerCalls = Math.abs(callOptionEuler.priceCall(strike,timeHorizon,riskFreeRate)-analyticCallValue)
-					/analyticCallValue*100;
+					/analyticCallValue;
 			errorLogEulerCalls = Math.abs(callOptionLogEuler.priceCall(strike,timeHorizon,riskFreeRate)-analyticCallValue)
-					/analyticCallValue*100;
+					/analyticCallValue;
 			errorMilsteinCalls = Math.abs(callOptionMilstein.priceCall(strike,timeHorizon,riskFreeRate)-analyticCallValue)
-					/analyticCallValue*100;
+					/analyticCallValue;
 
 			//we update the average
 			averageErrorEuler = (averageErrorEuler * i + errorEulerCalls) / (i+1);
@@ -86,6 +86,9 @@ public class CallChecks {
 			averageErrorMilstein = (averageErrorMilstein * i + errorMilsteinCalls) / (i+1);
 
 		}
+		averageErrorEuler*=100;
+		averageErrorLogEuler*=100;
+		averageErrorMilstein*=100;
 
 		System.out.println("Analytical price of the call: " + analyticCallValue);
 		System.out.println("Average error for Euler scheme: " + averageErrorEuler);

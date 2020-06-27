@@ -18,6 +18,8 @@ import net.finmath.time.TimeDiscretization;
  * (for example, Euler, log-Euler or Milstein) and on the dynamics of the process.
  * All the other methods are implemented in this class, as they only depend on the generation
  * of the process.
+ * We want to simulate
+ * dX_t=\mu(t,X_t)dt+\sigma(t,X_t)dW_t
  *
  * @author Andrea Mazzon
  *
@@ -90,7 +92,13 @@ public abstract class AbstractSimulation {
 			processDrift = getDrift(paths[timeIndex - 1],timeIndex);
 			processDiffusion = getDiffusion(paths[timeIndex - 1],timeIndex);
 			paths[timeIndex] = paths[timeIndex - 1].apply(inverseTransform).add(processDrift).add(processDiffusion);
+			/*
+			 * F = f^{-1}. F(X_{t_k})=F(X_{t_{k-1}})+drift(F(X_{t_{k-1}),t_{k-1}]+diffusion(F(X_{t_{k-1}),t_{k-1}]
+			 */
 			paths[timeIndex] = paths[timeIndex].apply(transform);
+			/*
+			 * X_{t_k}=f(F(X_{t_k}))
+			 */
 		}
 	}
 

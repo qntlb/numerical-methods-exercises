@@ -25,6 +25,7 @@ public class CallOption {
 	 * @return the price of the option
 	 */
 	public double priceCall(double strike, double maturity, double riskFreeRate) {
+		//(S_T-K)^+
 		final RandomVariable payoff = underlying.getProcessAtGivenTime(maturity).sub(strike).floor(0.0);
 		final RandomVariable discountedPayoff = payoff.mult(Math.exp(-riskFreeRate * maturity));
 		final double price = discountedPayoff.getAverage();
