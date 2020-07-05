@@ -29,6 +29,7 @@ public class ExchangeOption extends AbstractAssetMonteCarloProduct {
                 this.firstAssetIndex= firstAssetIndex;
                 this.secondAssetIndex = secondAssetIndex;
         }
+        
         //overloaded constructor:  firstAssetIndex = 0, secondAssetIndex = 1
         public ExchangeOption(double maturity) {
                 this(maturity,0,1);//note this use of this
@@ -55,7 +56,7 @@ public class ExchangeOption extends AbstractAssetMonteCarloProduct {
                 // ...to evaluation time.
                 final RandomVariable numeraireAtEvalTime = model.getNumeraire(evaluationTime);
                 values = values.mult(numeraireAtEvalTime);
-
+                //e^(t-T)*payoff
                 return values;
         }
 

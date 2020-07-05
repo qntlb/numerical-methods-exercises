@@ -35,7 +35,7 @@ class ExchangeOptionTest {
 
         final double riskFreeRate = 0;
 
-        double correlation = 0.4;
+        double correlation = -1;
         /*
          * correlation matrix: to be given to MonteCarloMultiAssetBlackScholesModel to construct
          * the simulation of two possibly correlated geometric Brownian motions
@@ -75,6 +75,32 @@ class ExchangeOptionTest {
                                 initialPrices[0], riskFreeRate, sigma, maturity, initialPrices[1]);
         }
         
+        /**
+         * This method tests the dependence of the price of the payoff with respect to the correlation between the
+         * two assets. We can see that the price is decraesing with respect to the correlation
+         * 
+         * @throws CalculationException
+         */
+        @Test 
+        public void testCorrelation() throws CalculationException{
+        	final BrownianMotion brownian = new BrownianMotionFromMersenneRandomNumbers(times, 2,
+                    numberOfSimulations, 1897);//(B^1,B^2)
+        	System.out.print("Correlation    ");
+        	System.out.println("Price");
+
+        	for (int i = 0; i<= 20; i++){
+        		correlation = (i-10) * 0.1;//the correlation goes from -1 to 1
+        		final double[][] correlationMatrix = {{1.0, correlation},{correlation,1.0}};
+ 
+        		final AssetModelMonteCarloSimulationModel simulationTwoDimGeometricBrownian =
+                        new MonteCarloMultiAssetBlackScholesModel(
+                                        brownian, initialPrices, riskFreeRate, volatilities, correlationMatrix);
+        		final ExchangeOption exchangeOption=new ExchangeOption(maturity);
+        		final double monteCarloPrice = exchangeOption.getValue(simulationTwoDimGeometricBrownian);
+        		System.out.print(correlation + "   ");
+        		System.out.println(monteCarloPrice);
+        	}
+        }
         
         /**
          * Tests if the value of the exchange option computed by Monte Carlo for a given seed
@@ -84,10 +110,12 @@ class ExchangeOptionTest {
         @Test
         public void testExchange() throws CalculationException {
                 final int seed = 1897;
-
+                //W_1 = B_1
+                //W_2 = rho B_1 + sqrt(1-rho^2)B^2
+                //here you simulate B^1, B^2 independent 
                 //Two-dimensional Brownian motion
                 final BrownianMotion brownian = new BrownianMotionFromMersenneRandomNumbers(times, 2,
-                                numberOfSimulations, seed);
+                                numberOfSimulations, seed);//(B^1,B^2)
                 /*
                  * finmath class, we use it to get the simulation of a two dimensional Black-Scholes
                  * model: two geometric Brownian motions, with possibly dependent stochastic drivers

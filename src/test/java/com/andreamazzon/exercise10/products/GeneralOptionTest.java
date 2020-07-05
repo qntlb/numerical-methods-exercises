@@ -35,7 +35,7 @@ class GeneralOptionTest {
 
                 final double initialTime = 0;
                 final double maturity = 1.0;
-                final int numberOfTimeSteps = 1000;
+                final int numberOfTimeSteps = 100;
                 final double timeStep = maturity / numberOfTimeSteps;
                 final TimeDiscretization times = new TimeDiscretizationFromArray(initialTime,
                                 numberOfTimeSteps, timeStep);

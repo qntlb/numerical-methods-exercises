@@ -51,7 +51,7 @@ public class GeneralOption extends AbstractAssetMonteCarloProduct {
                 final RandomVariable underlyingAtMaturity        = model.getAssetValue(maturity, 0);
 
                 // The payoff: given by the apply method of RandomVariable
-                RandomVariable values = underlyingAtMaturity.apply(payoffFunction);
+                RandomVariable values = underlyingAtMaturity.apply(payoffFunction);//f(S_T)
 
                 // Discounting...
                 final RandomVariable numeraireAtMaturity                = model.getNumeraire(maturity);
