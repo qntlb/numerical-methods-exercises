@@ -1,6 +1,7 @@
-package com.andreamazzon.exercise11.hedging;
+package com.andreamazzon.exercise12.sensitivities;
 
 
+import java.lang.reflect.InvocationTargetException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
@@ -19,11 +20,13 @@ import net.finmath.time.TimeDiscretizationFromArray;
  * @author Andrea Mazzon
  *
  */
-public class DeltaHedgeTest {
+public class SensitivitiesTest {
 
 	static NumberFormat formatDec4 = new DecimalFormat("0.0000");
-	public static void main(String[] args) throws CalculationException {
+	public static void main(String[] args) throws CalculationException, NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 
+
+		final int numberOfSimulationsForSensitivities = 1000;
 
 		final int numberOfTimeSteps = 100;
 		final int numberOfSimulations = 1;
@@ -34,6 +37,7 @@ public class DeltaHedgeTest {
 
 		final double riskFreeRate = 0.3;
 
+		final DeltaType deltaType = DeltaType.PATHWISE;
 		// Bs simulation
 		final TimeDiscretization times = new TimeDiscretizationFromArray(0.0, numberOfTimeSteps,
 				timeHorizon / numberOfTimeSteps);
@@ -48,8 +52,9 @@ public class DeltaHedgeTest {
 		final double strike = 100;
 		final double maturity = timeHorizon;
 
-		final DeltaHedge deltaHedge = new DeltaHedge(blackScholesHedging,
-				volatilityForHedge, riskFreeRate, strike, maturity);
+		final DeltaHedgeWithSensitivities deltaHedge = new DeltaHedgeWithSensitivities(blackScholesHedging,
+				volatilityForHedge, riskFreeRate, strike, maturity, deltaType,
+				numberOfSimulationsForSensitivities);
 
 		final double[] stockPrices = deltaHedge.getPathOfUnderlying();
 		final double[] optionPrices = deltaHedge.getOptionPrices();
@@ -78,3 +83,4 @@ public class DeltaHedgeTest {
 				UsefulMethodsMatricesVectors.absVector(hedgeError)));
 	}
 }
+
