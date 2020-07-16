@@ -5,11 +5,8 @@ import java.util.Map;
 
 import net.finmath.exception.CalculationException;
 import net.finmath.montecarlo.assetderivativevaluation.AssetModelMonteCarloSimulationModel;
-import net.finmath.montecarlo.assetderivativevaluation.MonteCarloAssetModel;
 import net.finmath.montecarlo.assetderivativevaluation.products.AbstractAssetMonteCarloProduct;
 import net.finmath.montecarlo.assetderivativevaluation.products.EuropeanOption;
-import net.finmath.montecarlo.model.AbstractProcessModel;
-import net.finmath.montecarlo.model.ProcessModel;
 import net.finmath.stochastic.RandomVariable;
 
 /**
@@ -59,9 +56,7 @@ public class EuropeanOptionDeltaCentralDifferences extends AbstractAssetMonteCar
 		 */
 
 		//first step: get the initial value of underlyingSimulation. Look at the Finmath library.
-		final ProcessModel model = ((MonteCarloAssetModel) underlyingSimulation).getModel();
-
-		final RandomVariable initialValue = ((AbstractProcessModel) model).getInitialValue(null)[0];
+		final RandomVariable initialValue =  underlyingSimulation.getAssetValue(0,0);
 
 		/*
 		 * we want to construct a new model with modified initial data S_t + delta: to this purpose, we use
@@ -70,47 +65,45 @@ public class EuropeanOptionDeltaCentralDifferences extends AbstractAssetMonteCar
 		final Map<String, Object> dataForward = new HashMap<String, Object>();
 		dataForward.put("initialValue", initialValue.add(step).doubleValue());
 
+
+		// now you have to use the method getCloneWithModifiedData giving it dataForward
+		final AssetModelMonteCarloSimulationModel monteCarloForward = underlyingSimulation
+				.getCloneWithModifiedData(dataForward);
+
+		// same thing for S_{t-delta}. Now the new initial value will be the old one minus the step
+		final Map<String, Object> dataBackward = new HashMap<String, Object>();
+		dataBackward.put("initialValue", initialValue.sub(step).doubleValue());
+
+		final AssetModelMonteCarloSimulationModel monteCarloBackward = underlyingSimulation
+				.getCloneWithModifiedData(dataForward);
+
 		/*
-		 * now you have to use the method getCloneWithModifiedData giving it dataForward. Complete the following
-		 * code:
+		 * So now we have S_{t-delta}, S_{t+delta}, and we want to compute the correspondent values for the call.
+		 * Now we construct an EuropeanOption object with maturity and strike that are fields of the class
 		 */
-		final MonteCarloAssetModel monteCarloForward =  (MonteCarloAssetModel) underlyingSimulation
-				.getCloneWithModifiedData(dataForward);;
+		final EuropeanOption callOption = new EuropeanOption(maturity, strike);
 
-				// same thing for S_t - delta. now the new initial value will be the old one minus the step
-				final Map<String, Object> dataBackward = new HashMap<String, Object>();
-				dataBackward.put("initialValue", initialValue.sub(step).doubleValue());
+		final RandomVariable forwardOptionPayoffs = callOption.getValue(maturity, monteCarloForward);
+		final RandomVariable backwardOptionPayoffs = callOption.getValue(maturity, monteCarloBackward);
 
-				// final MonteCarloAssetModel monteCarloBackward =
-				final MonteCarloAssetModel monteCarloBackward = (MonteCarloAssetModel) underlyingSimulation
-						.getCloneWithModifiedData(dataForward);;
+		/*
+		 * Now, having forwardOptionPayoffs and backwardOptionPayoffs, compute RandomVariable values,
+		 * which is the central difference.
+		 */
+		RandomVariable values = (forwardOptionPayoffs.sub(backwardOptionPayoffs)).div(2*step);
 
-						final EuropeanOption callOption = new EuropeanOption(maturity, strike);
-						/*
-						 * now construct an EuropeanOption object with maturity and strike that are fields of the class,
-						 * and call the getValue method in order to get something instead of null here below:
-						 */
-						final RandomVariable forwardOptionPayoffs = callOption.getValue(maturity, monteCarloForward);
-						final RandomVariable backwardOptionPayoffs = callOption.getValue(maturity, monteCarloBackward);
+		// Discounting...
+		final RandomVariable numeraireAtMaturity		= underlyingSimulation.getNumeraire(maturity);
+		final RandomVariable monteCarloWeights		= underlyingSimulation.getMonteCarloWeights(maturity);
+		values = values.div(numeraireAtMaturity).mult(monteCarloWeights);
 
-						/*
-						 * Now, having forwardOptionPayoffs and backwardOptionPayoffs, compute RandomVariable values,
-						 * which is the central difference.
-						 */
-						RandomVariable values = (forwardOptionPayoffs.sub(backwardOptionPayoffs)).div(2*step);
+		// ...to evaluation time.
+		final RandomVariable	numeraireAtEvalTime					= underlyingSimulation.getNumeraire(evaluationTime);
+		final RandomVariable	monteCarloProbabilitiesAtEvalTime	= underlyingSimulation.
+				getMonteCarloWeights(evaluationTime);
+		values = values.mult(numeraireAtEvalTime).div(monteCarloProbabilitiesAtEvalTime);
 
-						// Discounting...
-						final RandomVariable numeraireAtMaturity		= underlyingSimulation.getNumeraire(maturity);
-						final RandomVariable monteCarloWeights		= underlyingSimulation.getMonteCarloWeights(maturity);
-						values = values.div(numeraireAtMaturity).mult(monteCarloWeights);
-
-						// ...to evaluation time.
-						final RandomVariable	numeraireAtEvalTime					= underlyingSimulation.getNumeraire(evaluationTime);
-						final RandomVariable	monteCarloProbabilitiesAtEvalTime	= underlyingSimulation.
-								getMonteCarloWeights(evaluationTime);
-						values = values.mult(numeraireAtEvalTime).div(monteCarloProbabilitiesAtEvalTime);
-
-						return values;
+		return values;
 	}
 }
 

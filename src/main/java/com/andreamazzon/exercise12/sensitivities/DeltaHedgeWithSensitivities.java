@@ -7,6 +7,7 @@ import net.finmath.exception.CalculationException;
 import net.finmath.functions.AnalyticFormulas;
 import net.finmath.montecarlo.BrownianMotion;
 import net.finmath.montecarlo.BrownianMotionFromMersenneRandomNumbers;
+import net.finmath.montecarlo.assetderivativevaluation.AssetModelMonteCarloSimulationModel;
 import net.finmath.montecarlo.assetderivativevaluation.MonteCarloAssetModel;
 import net.finmath.montecarlo.assetderivativevaluation.MonteCarloBlackScholesModel;
 import net.finmath.montecarlo.assetderivativevaluation.models.BlackScholesModel;
@@ -104,14 +105,14 @@ public class DeltaHedgeWithSensitivities {
 	 */
 	private void generateDeltasAndPrices() throws CalculationException, NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 
-		Class<?> classForSensitivities;
-
 		if (pathOfUnderlying == null) {
 			generatePricePath();
 		}
 
 		optionPrices = new double[pathOfUnderlying.length];
 		deltas = new double[pathOfUnderlying.length];
+
+		Class<?> classForSensitivities;
 
 		switch (type) {
 		case PATHWISE:
@@ -140,17 +141,17 @@ public class DeltaHedgeWithSensitivities {
 			final AbstractAssetMonteCarloProduct deltaCalculator =
 					(AbstractAssetMonteCarloProduct) classConstructor.newInstance(timeToMaturity, optionStrike);
 
-			final BlackScholesModel cloneModel = new BlackScholesModel(newValueUnderlying,
+			final BlackScholesModel blackScholes = new BlackScholesModel(newValueUnderlying,
 					interestRate, volatilityHedge);
 
 			//construct an object of type MonteCarloAssetModel to pass to deltaCalculator.
 			final BrownianMotion brownianMotion = new BrownianMotionFromMersenneRandomNumbers(
 					timeDiscretization, 1, numberOfSimulationsForSensitivities, seed);
 
-			final MonteCarloAssetModel cloneMonteCarlo = new MonteCarloAssetModel(
-					cloneModel, brownianMotion);
+			final AssetModelMonteCarloSimulationModel monteCarloSimulation = new MonteCarloAssetModel(
+					blackScholes, brownianMotion);
 
-			deltas[timeIndex] = deltaCalculator.getValue(cloneMonteCarlo);
+			deltas[timeIndex] = deltaCalculator.getValue(monteCarloSimulation);
 			//we price the option with the model of the underlying
 			optionPrices[timeIndex] = AnalyticFormulas.blackScholesOptionValue(
 					newValueUnderlying,interestRate, volatilityUnderlying, timeToMaturity,

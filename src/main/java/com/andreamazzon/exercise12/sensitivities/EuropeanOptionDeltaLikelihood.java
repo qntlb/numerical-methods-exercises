@@ -46,8 +46,8 @@ public class EuropeanOptionDeltaLikelihood extends AbstractAssetMonteCarloProduc
 		BlackScholesModel blackScholesModel;
 		try {
 			//is the model got from the getModel() method aan object of the BlackScholes class?
-			blackScholesModel = (/*downcast*/BlackScholesModel)(
-					/*downcast*/(MonteCarloAssetModel)monteCarloModel).getModel();
+			blackScholesModel = (/*downcast*/BlackScholesModel)
+					(/*downcast*/(MonteCarloAssetModel) monteCarloModel).getModel();
 		}
 		catch(final Exception e) {
 			throw new ClassCastException("This method requires a Black-Scholes type model"
@@ -72,9 +72,18 @@ public class EuropeanOptionDeltaLikelihood extends AbstractAssetMonteCarloProduc
 		 * the delta.
 		 */
 
+		/*
+		 * We have to compute (d Phi_{S(T)}(S(T))/d S_0)/Phi_{S(T)}(S(T)),
+		 * with
+		 * Phi_{S(T)}(S(T)) =
+		 * 1/(sigma sqrt(T)) Phi_{std.norm}( 1/(sigma sqrt(T)) ( log(S_T/S_0)-rT+1/2 sigma^2T )/S_T ),
+		 * 	Phi_{std_norm}(x)=1/sqrt(2 pi)*exp(-x^2/2), d/dx Phi_{std_norm}(x) = - x Phi_{std_norm}(x)
+		 * So we have
+		 * d Phi_{S(T)}(S(T))/d S_t = 1/(sigma sqrt(T)) * (-1/(sigma sqrt(T))(log(S_T/S_t)-rT+1/2 sigma^2T)/S_T)(-1/S_t)
+		 */
 
 		final RandomVariable likelihoodRatio = underlyingAtMaturity.div(underlyingAtToday).log().
-				sub(riskFree.mult(maturity).sub(sigma.squared().mult(0.5*maturity))).div(sigma).div(sigma)
+				sub(riskFree.mult(maturity)).add(sigma.squared().mult(0.5*maturity)).div(sigma).div(sigma)
 				.div(maturity).div(underlyingAtToday);
 
 		RandomVariable values	= underlyingAtMaturity.sub(strike).floor(0.0).mult(likelihoodRatio);

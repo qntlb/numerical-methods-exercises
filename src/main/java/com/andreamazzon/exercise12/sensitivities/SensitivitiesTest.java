@@ -26,9 +26,9 @@ public class SensitivitiesTest {
 	public static void main(String[] args) throws CalculationException, NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 
 
-		final int numberOfSimulationsForSensitivities = 1000;
+		final int numberOfSimulationsForSensitivities = 100;
 
-		final int numberOfTimeSteps = 100;
+		final int numberOfTimeSteps = 1000;
 		final int numberOfSimulations = 1;
 		final double initialPrice = 100.0;
 		final double timeHorizon = 1.0;
@@ -37,7 +37,7 @@ public class SensitivitiesTest {
 
 		final double riskFreeRate = 0.3;
 
-		final DeltaType deltaType = DeltaType.PATHWISE;
+		final DeltaType deltaType = DeltaType.LIKELIHOOD;
 		// Bs simulation
 		final TimeDiscretization times = new TimeDiscretizationFromArray(0.0, numberOfTimeSteps,
 				timeHorizon / numberOfTimeSteps);
@@ -70,7 +70,7 @@ public class SensitivitiesTest {
 		System.out.print("Portfolio value   ");
 		System.out.println("Hedging error   ");
 
-		for (int timeIndex = 0; timeIndex < times.getNumberOfTimes(); timeIndex ++ ) {
+		for (int timeIndex = 0; timeIndex < times.getNumberOfTimes() - 1; timeIndex ++ ) {
 			System.out.print(formatDec4.format(stockPrices[timeIndex])+ "      ");
 			System.out.print(formatDec4.format(optionPrices[timeIndex])+ "            ");
 			System.out.print(formatDec4.format(deltas[timeIndex])+ "     ");
