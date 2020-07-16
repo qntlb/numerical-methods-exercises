@@ -5,8 +5,11 @@ import java.lang.reflect.InvocationTargetException;
 
 import net.finmath.exception.CalculationException;
 import net.finmath.functions.AnalyticFormulas;
+import net.finmath.montecarlo.BrownianMotion;
+import net.finmath.montecarlo.BrownianMotionFromMersenneRandomNumbers;
 import net.finmath.montecarlo.assetderivativevaluation.MonteCarloAssetModel;
 import net.finmath.montecarlo.assetderivativevaluation.MonteCarloBlackScholesModel;
+import net.finmath.montecarlo.assetderivativevaluation.models.BlackScholesModel;
 import net.finmath.montecarlo.assetderivativevaluation.products.AbstractAssetMonteCarloProduct;
 import net.finmath.time.TimeDiscretization;
 
@@ -137,9 +140,15 @@ public class DeltaHedgeWithSensitivities {
 			final AbstractAssetMonteCarloProduct deltaCalculator =
 					(AbstractAssetMonteCarloProduct) classConstructor.newInstance(timeToMaturity, optionStrike);
 
-			//construct an object of type MonteCarloAssetModel to pass to deltaCalculator.
+			final BlackScholesModel cloneModel = new BlackScholesModel(newValueUnderlying,
+					interestRate, volatilityHedge);
 
-			final MonteCarloAssetModel cloneMonteCarlo = null;
+			//construct an object of type MonteCarloAssetModel to pass to deltaCalculator.
+			final BrownianMotion brownianMotion = new BrownianMotionFromMersenneRandomNumbers(
+					timeDiscretization, 1, numberOfSimulationsForSensitivities, seed);
+
+			final MonteCarloAssetModel cloneMonteCarlo = new MonteCarloAssetModel(
+					cloneModel, brownianMotion);
 
 			deltas[timeIndex] = deltaCalculator.getValue(cloneMonteCarlo);
 			//we price the option with the model of the underlying

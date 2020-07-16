@@ -60,11 +60,11 @@ public class EuropeanOptionDeltaLikelihood extends AbstractAssetMonteCarloProduc
 		 * blackScholesModel.
 		 */
 		// Get underlying and numeraire
-		final RandomVariable underlyingAtMaturity	= null;
-		final RandomVariable underlyingAtToday = null;
+		final RandomVariable underlyingAtMaturity	= monteCarloModel.getAssetValue(maturity, 0);
+		final RandomVariable underlyingAtToday = monteCarloModel.getAssetValue(evaluationTime, 0);
 
-		final RandomVariable riskFree = null;
-		final RandomVariable sigma = null;
+		final RandomVariable riskFree = blackScholesModel.getRiskFreeRate();
+		final RandomVariable sigma = blackScholesModel.getVolatility();
 
 		/*
 		 * second step: use the quantities found above in order to compute the delta. Use the formulas
@@ -73,7 +73,11 @@ public class EuropeanOptionDeltaLikelihood extends AbstractAssetMonteCarloProduc
 		 */
 
 
-		RandomVariable values	= null;
+		final RandomVariable likelihoodRatio = underlyingAtMaturity.div(underlyingAtToday).log().
+				sub(riskFree.mult(maturity).sub(sigma.squared().mult(0.5*maturity))).div(sigma).div(sigma)
+				.div(maturity).div(underlyingAtToday);
+
+		RandomVariable values	= underlyingAtMaturity.sub(strike).floor(0.0).mult(likelihoodRatio);
 
 		// Discounting...
 		final RandomVariable numeraireAtMaturity = monteCarloModel.getNumeraire(maturity);

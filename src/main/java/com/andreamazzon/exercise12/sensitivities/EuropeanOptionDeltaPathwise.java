@@ -46,7 +46,7 @@ public class EuropeanOptionDeltaPathwise extends AbstractAssetMonteCarloProduct 
 		 */
 		BlackScholesModel blackScholesModel;
 		try {
-			//is the model got from the getModel() method aan object of the BlackScholes class?
+			//is the model got from the getModel() method an object of the BlackScholes class?
 			blackScholesModel = (/*downcast*/BlackScholesModel)(
 					/*downcast*/(MonteCarloAssetModel)monteCarloModel).getModel();
 		}
@@ -56,15 +56,16 @@ public class EuropeanOptionDeltaPathwise extends AbstractAssetMonteCarloProduct 
 		}
 
 		//first step: get the underlying at current time and at evaluation time
-		final RandomVariable	underlyingAtEvalTime	= null;
-		final RandomVariable	underlyingAtMaturity	= null;
+		final RandomVariable	underlyingAtEvalTime	= monteCarloModel.getAssetValue(evaluationTime,0);;
+		final RandomVariable	underlyingAtMaturity	= monteCarloModel.getAssetValue(maturity,0);
 
 		/*
 		 * now use the formulas at page 428 of the script. Hint: the derivative can be computed as the value of
-		 * the asset or an asset or nothing option divided by the current value of the underlying. The asset
+		 * the asset or nothing option divided by the current value of the underlying. The asset
 		 * or nothing option has payoff S_T 1_{S_T > strike}.
 		 */
-		RandomVariable values = null;
+		RandomVariable values = underlyingAtMaturity.apply(x -> x >= strike ? x : 0.0)
+				.div(underlyingAtEvalTime);
 
 		// Discounting...
 		final RandomVariable numeraireAtMaturity		= monteCarloModel.getNumeraire(maturity);
