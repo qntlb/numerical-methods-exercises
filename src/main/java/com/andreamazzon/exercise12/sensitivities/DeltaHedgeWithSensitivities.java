@@ -116,7 +116,7 @@ public class DeltaHedgeWithSensitivities {
 
 		switch (type) {
 		case PATHWISE:
-			classForSensitivities = EuropeanOptionDeltaLikelihood.class;
+			classForSensitivities = EuropeanOptionDeltaPathwise.class;
 			break;
 		case FINITE_DIFFERENCES:
 			classForSensitivities = EuropeanOptionDeltaCentralDifferences.class;
